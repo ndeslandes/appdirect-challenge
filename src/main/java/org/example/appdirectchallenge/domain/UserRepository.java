@@ -28,7 +28,7 @@ public class UserRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(
                 connection -> {
-                    PreparedStatement ps = connection.prepareStatement("INSERT INTO app_user(uuid, email, firstName, lastName, userLanguage, openId, edition) VALUES (?, ?, ?, ?, ?, ?)", new String[]{"id"});
+                    PreparedStatement ps = connection.prepareStatement("INSERT INTO app_user(uuid, email, firstName, lastName, userLanguage, openId, edition) VALUES (?, ?, ?, ?, ?, ?, ?)", new String[]{"id"});
                     ps.setString(1, user.uuid);
                     ps.setString(2, user.email);
                     ps.setString(3, user.firstName);
