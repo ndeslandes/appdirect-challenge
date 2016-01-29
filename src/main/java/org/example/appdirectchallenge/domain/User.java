@@ -2,6 +2,7 @@ package org.example.appdirectchallenge.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
@@ -15,7 +16,13 @@ public class User {
     public String uuid;
 
     @JsonCreator
-    public User(String uuid, String email, String firstName, String lastName, String language, String openId, Address address) {
+    public User(@JsonProperty("uuid") String uuid,
+                @JsonProperty("email") String email,
+                @JsonProperty("firstName") String firstName,
+                @JsonProperty("lastName") String lastName,
+                @JsonProperty("language") String language,
+                @JsonProperty("openId") String openId,
+                @JsonProperty("address") Address address) {
         this.uuid = uuid;
         this.email = email;
         this.firstName = firstName;

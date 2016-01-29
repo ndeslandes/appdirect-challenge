@@ -2,6 +2,7 @@ package org.example.appdirectchallenge.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Address {
@@ -16,7 +17,14 @@ public class Address {
     public String zip;
 
     @JsonCreator
-    public Address(String firstName, String lastName, String fullName, String street1, String zip, String city, String state, String country) {
+    public Address(@JsonProperty("firstName") String firstName,
+                   @JsonProperty("lastName") String lastName,
+                   @JsonProperty("fullName") String fullName,
+                   @JsonProperty("street1") String street1,
+                   @JsonProperty("zip") String zip,
+                   @JsonProperty("city") String city,
+                   @JsonProperty("state") String state,
+                   @JsonProperty("country") String country) {
         this.city = city;
         this.country = country;
         this.firstName = firstName;
