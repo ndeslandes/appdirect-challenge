@@ -21,14 +21,14 @@ public class SubscriptionRepository {
     }
 
     public List<Subscription> list() {
-        return jdbc.query("SELECT accountId, creatorFirstName, creatorLastName, edition FROM subscription", subscriptionMapper);
+        return jdbc.query("SELECT account_id, creator_first_name, creator_last_name, edition FROM subscription", subscriptionMapper);
     }
 
     public Long create(Subscription subscription) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(
                 connection -> {
-                    PreparedStatement ps = connection.prepareStatement("INSERT INTO subscription(creatorFirstName, creatorLastName, edition) VALUES (?, ?, ?)", new String[]{"accountId"});
+                    PreparedStatement ps = connection.prepareStatement("INSERT INTO subscription(creator_first_name, creator_last_name, edition) VALUES (?, ?, ?)", new String[]{"account_id"});
                     ps.setString(1, subscription.creatorFirstName);
                     ps.setString(2, subscription.creatorLastName);
                     ps.setString(3, subscription.edition);
@@ -39,12 +39,12 @@ public class SubscriptionRepository {
     }
 
     public boolean delete(Long accountId) {
-        return jdbc.update("DELETE FROM subscription WHERE accountId = ?", accountId) != 0;
+        return jdbc.update("DELETE FROM subscription WHERE account_id = ?", accountId) != 0;
     }
 
-    private static final RowMapper<Subscription> subscriptionMapper = (rs, rowNum) -> new Subscription(rs.getLong("accountId"),
-            rs.getString("creatorFirstName"),
-            rs.getString("creatorLastName"),
+    private static final RowMapper<Subscription> subscriptionMapper = (rs, rowNum) -> new Subscription(rs.getLong("account_id"),
+            rs.getString("creator_first_name"),
+            rs.getString("creator_last_name"),
             rs.getString("edition"));
 
 }
