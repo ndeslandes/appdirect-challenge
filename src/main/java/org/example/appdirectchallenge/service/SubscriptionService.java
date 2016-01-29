@@ -33,7 +33,7 @@ public class SubscriptionService {
         log.info("subscriptionCreated url=" + url);
         //TODO validate request signature
 
-        OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
+        OAuthConsumer consumer = new DefaultOAuthConsumer("challenge-77055", "wgUqWZjxYW7J4Cs1");
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
         consumer.sign(request);
         request.connect();
