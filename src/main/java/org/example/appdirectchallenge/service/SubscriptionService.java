@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -37,18 +41,30 @@ public class SubscriptionService {
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
         consumer.sign(request);
         request.connect();
-        String responseMessage = request.getResponseMessage();
-        log.info(responseMessage);
+        if (request.getResponseCode() == 200) {
+            String response = readInputStream(request.getInputStream());
+            log.info(response);
 
-        ObjectMapper mapper = new ObjectMapper();
-        Notification notification = mapper.readValue(responseMessage, Notification.class);
+            ObjectMapper mapper = new ObjectMapper();
+            Notification notification = mapper.readValue(response, Notification.class);
 
-        //This signs a return URL:
-        //OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
-        //consumer.setSigningStrategy( new QueryStringSigningStrategy());
-        //String url = "https://www.appdirect.com/AppDirect/finishorder?success=true&accountIdentifer=Alice";
-        //String signedUrl = consumer.sign(url);
+            //This signs a return URL:
+            //OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
+            //consumer.setSigningStrategy( new QueryStringSigningStrategy());
+            //String url = "https://www.appdirect.com/AppDirect/finishorder?success=true&accountIdentifer=Alice";
+            //String signedUrl = consumer.sign(url);
 
-        users.create(notification.creator);
+            users.create(notification.creator);
+        }
+    }
+
+    private String readInputStream(InputStream inputStream) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder sb = new StringBuilder();
+        String output;
+        while ((output = br.readLine()) != null) {
+            sb.append(output);
+        }
+        return sb.toString();
     }
 }
