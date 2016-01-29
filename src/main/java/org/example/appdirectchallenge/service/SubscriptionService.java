@@ -77,13 +77,6 @@ public class SubscriptionService {
         ObjectMapper mapper = new ObjectMapper();
         Notification notification = mapper.readValue(response, Notification.class);
 
-        //This signs a return URL:
-        //OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
-        //consumer.setSigningStrategy( new QueryStringSigningStrategy());
-        //String url = "https://www.appdirect.com/AppDirect/finishorder?success=true&accountIdentifer=Alice";
-        //String signedUrl = consumer.sign(url);
-
-        //TODO you can do better than that!
         users.delete(notification.payload.account.accountIdentifier);
         return new ResponseEntity<>(new Response("true", ""), HttpStatus.OK);
         //}
