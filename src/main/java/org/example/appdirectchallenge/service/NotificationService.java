@@ -38,7 +38,7 @@ public class NotificationService {
     }
 
     @RequestMapping("create")
-    public ResponseEntity<Response> create(@RequestParam("url") String url) throws Exception {
+    public ResponseEntity<Response> create(@RequestParam("url") String url) {
         try {
             if (validateSignature()) {
                 Notification notification = getNotification(url);
@@ -61,7 +61,7 @@ public class NotificationService {
     }
 
     @RequestMapping("change")
-    public ResponseEntity<Response> change(@RequestParam("url") String url) throws OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
+    public ResponseEntity<Response> change(@RequestParam("url") String url) {
         try {
             if (validateSignature()) {
                 Notification notification = getNotification(url);
@@ -80,7 +80,7 @@ public class NotificationService {
     }
 
     @RequestMapping("cancel")
-    public ResponseEntity<Response> cancel(@RequestParam("url") String url) throws OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
+    public ResponseEntity<Response> cancel(@RequestParam("url") String url) {
         try {
             if (validateSignature()) {
                 Notification notification = getNotification(url);

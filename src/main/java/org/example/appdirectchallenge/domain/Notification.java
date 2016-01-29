@@ -8,8 +8,8 @@ import com.sun.org.apache.xpath.internal.operations.String;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Notification {
 
-    public Type type;
-    public MarketPlace marketPlace;
+    public String type;
+    public MarketPlace marketplace;
     public String applicationUuid;
     public String flag;
     public String returnUrl;
@@ -17,15 +17,15 @@ public class Notification {
     public Payload payload;
 
     @JsonCreator
-    public Notification(@JsonProperty("type") Type type,
-                        @JsonProperty("marketplace") MarketPlace marketPlace,
+    public Notification(@JsonProperty("type") String type,
+                        @JsonProperty("marketplace") MarketPlace marketplace,
                         @JsonProperty("applicationUuid") String applicationUuid,
                         @JsonProperty("flag") String flag,
                         @JsonProperty("returnUrl") String returnUrl,
                         @JsonProperty("creator") User creator,
                         @JsonProperty("payload") Payload payload) {
         this.type = type;
-        this.marketPlace = marketPlace;
+        this.marketplace = marketplace;
         this.applicationUuid = applicationUuid;
         this.flag = flag;
         this.returnUrl = returnUrl;
