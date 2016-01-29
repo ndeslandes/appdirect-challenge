@@ -34,11 +34,11 @@ public class UserServiceTest {
 
     @Test
     public void list() throws Exception {
-        when(userRepository.list()).thenReturn(Collections.singletonList(new User(1L, "", "", "", "", "", "")));
+        when(userRepository.list()).thenReturn(Collections.singletonList(new User(1L, "", "", "", "", "", "", "")));
 
         mvc.perform(MockMvcRequestBuilders.get("/api/users").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[{\"id\":1,\"uuid\":\"\",\"email\":\"\",\"firstName\":\"\",\"lastName\":\"\",\"language\":\"\",\"openId\":\"\"}]")));
+                .andExpect(content().string(equalTo("[{\"id\":1,\"uuid\":\"\",\"email\":\"\",\"firstName\":\"\",\"lastName\":\"\",\"language\":\"\",\"openId\":\"\",\"edition\":\"\"}]")));
     }
 
 }

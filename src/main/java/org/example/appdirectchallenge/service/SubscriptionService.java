@@ -56,6 +56,8 @@ public class SubscriptionService {
         //String url = "https://www.appdirect.com/AppDirect/finishorder?success=true&accountIdentifer=Alice";
         //String signedUrl = consumer.sign(url);
 
+        //TODO you can do better than that!
+        notification.creator.edition = notification.payload.order.editionCode;
         Long userId = users.create(notification.creator);
         return new ResponseEntity<>(new Response("true", userId.toString()), HttpStatus.OK);
         //}

@@ -41,6 +41,6 @@ public class UserServiceITest {
     public void list() throws Exception {
         ResponseEntity<String> response = template.getForEntity(base.toString() + "api/users", String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(response.getBody(), equalTo("[{\"id\":1,\"uuid\":\"11111111-1111-1111-1111-111111111111\",\"email\":\"deslandes.nicolas@gmail.com\",\"firstName\":\"Nicolas\",\"lastName\":\"Deslandes\",\"language\":\"English\",\"openId\":\"1\"}]"));
+        assertThat(response.getBody(), equalTo("[{\"id\":1,\"uuid\":\"11111111-1111-1111-1111-111111111111\",\"email\":\"deslandes.nicolas@gmail.com\",\"firstName\":\"Nicolas\",\"lastName\":\"Deslandes\",\"language\":\"English\",\"openId\":\"1\",\"edition\":\"FREE\"}]"));
     }
 }

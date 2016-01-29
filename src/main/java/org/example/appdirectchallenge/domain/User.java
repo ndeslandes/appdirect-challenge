@@ -14,6 +14,7 @@ public class User {
     public String lastName;
     public String openId;
     public String uuid;
+    public String edition;
 
     @JsonCreator
     public User(@JsonProperty("id") Long id,
@@ -22,7 +23,8 @@ public class User {
                 @JsonProperty("firstName") String firstName,
                 @JsonProperty("lastName") String lastName,
                 @JsonProperty("language") String language,
-                @JsonProperty("openId") String openId) {
+                @JsonProperty("openId") String openId,
+                @JsonProperty("edition") String edition) {
         this.id = id;
         this.uuid = uuid;
         this.email = email;
@@ -30,6 +32,7 @@ public class User {
         this.language = language;
         this.lastName = lastName;
         this.openId = openId;
+        this.edition = edition;
     }
 
 }

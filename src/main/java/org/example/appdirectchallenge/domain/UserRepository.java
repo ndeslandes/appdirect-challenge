@@ -21,20 +21,21 @@ public class UserRepository {
     }
 
     public List<User> list() {
-        return jdbc.query("SELECT id, uuid, email, firstName, lastName, userLanguage, openId FROM app_user", userMapper);
+        return jdbc.query("SELECT id, uuid, email, firstName, lastName, userLanguage, openId, edition FROM app_user", userMapper);
     }
 
     public Long create(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(
                 connection -> {
-                    PreparedStatement ps = connection.prepareStatement("INSERT INTO app_user(uuid, email, firstName, lastName, userLanguage, openId) VALUES (?, ?, ?, ?, ?, ?)", new String[]{"id"});
+                    PreparedStatement ps = connection.prepareStatement("INSERT INTO app_user(uuid, email, firstName, lastName, userLanguage, openId, edition) VALUES (?, ?, ?, ?, ?, ?)", new String[]{"id"});
                     ps.setString(1, user.uuid);
                     ps.setString(2, user.email);
                     ps.setString(3, user.firstName);
                     ps.setString(4, user.lastName);
                     ps.setString(5, user.language);
                     ps.setString(6, user.openId);
+                    ps.setString(7, user.edition);
                     return ps;
                 },
                 keyHolder);
@@ -47,6 +48,7 @@ public class UserRepository {
             rs.getString("firstName"),
             rs.getString("lastName"),
             rs.getString("userLanguage"),
-            rs.getString("openId"));
+            rs.getString("openId"),
+            rs.getString("edition"));
 
 }
