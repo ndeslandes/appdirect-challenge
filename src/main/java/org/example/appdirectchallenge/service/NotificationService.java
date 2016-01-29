@@ -41,7 +41,6 @@ public class NotificationService {
         try {
             if (validateSignature()) {
                 Notification notification = getNotification(url);
-                log.info("MARKETPLACE URL "+ notification.marketPlace.baseUrl);
 
                 //TODO check unicity
                 //if(users.read() != null) {
