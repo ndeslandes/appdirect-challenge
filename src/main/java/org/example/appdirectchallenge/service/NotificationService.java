@@ -25,7 +25,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 @RestController
-@RequestMapping("api/subscription")
+@RequestMapping("api/notification/subscription")
 public class NotificationService {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -44,15 +44,17 @@ public class NotificationService {
 
                 //TODO check unicity
                 //if(users.read() != null) {
-                //    return new ResponseEntity<>(new ErrorResponse("USER_ALREADY_EXISTS", ""), HttpStatus.CONFLICT);
+                //    return new ResponseEntity<>(new ErrorResponse("ACCOUNT_ALREADY_EXISTS", ""), HttpStatus.CONFLICT);
                 //}
 
-                Long userId = subscriptions.create(new Subscription(notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode));
-                return new ResponseEntity<>(new SuccessResponse(userId.toString()), HttpStatus.OK);
+                Long accountId = subscriptions.create(new Subscription(notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode));
+                return new ResponseEntity<>(new SuccessResponse(accountId.toString()), HttpStatus.OK);
             } else {
+                log.warn("unauthorized");
                 return new ResponseEntity<>(new ErrorResponse("UNAUTHORIZED", ""), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
+            log.error("error", e);
             return new ResponseEntity<>(new ErrorResponse("UNKNOWN_ERROR", ""), HttpStatus.OK);
         }
     }

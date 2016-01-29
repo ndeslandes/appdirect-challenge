@@ -28,7 +28,7 @@ public class SubscriptionRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(
                 connection -> {
-                    PreparedStatement ps = connection.prepareStatement("INSERT INTO subscription(creatorFirstName, creatorLastName, edition) VALUES (?, ?, ?)", new String[]{"id"});
+                    PreparedStatement ps = connection.prepareStatement("INSERT INTO subscription(creatorFirstName, creatorLastName, edition) VALUES (?, ?, ?)", new String[]{"accountId"});
                     ps.setString(1, subscription.creatorFirstName);
                     ps.setString(2, subscription.creatorLastName);
                     ps.setString(3, subscription.edition);
