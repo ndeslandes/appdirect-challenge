@@ -42,7 +42,7 @@ public class UserRepository {
         return keyHolder.getKey().longValue();
     }
 
-    public void delete(String id) {
+    public void delete(Long id) {
         jdbc.update("DELETE FROM app_user WHERE id = ?", id);
     }
 

@@ -77,7 +77,7 @@ public class SubscriptionService {
         ObjectMapper mapper = new ObjectMapper();
         Notification notification = mapper.readValue(response, Notification.class);
 
-        users.delete(notification.payload.account.accountIdentifier);
+        users.delete(Long.valueOf(notification.payload.account.accountIdentifier));
         return new ResponseEntity<>(new Response("true", ""), HttpStatus.OK);
         //}
         //return new ResponseEntity<>(new Response("false", ""), HttpStatus.OK);
