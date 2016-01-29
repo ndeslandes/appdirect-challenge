@@ -1,10 +1,5 @@
 package org.example.appdirectchallenge.service;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-
-import java.net.URL;
-
 import org.example.appdirectchallenge.Application;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.URL;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -39,7 +39,9 @@ public class UserServiceITest {
     @Test
     public void getUsers() throws Exception {
         ResponseEntity<String> response = template.getForEntity(base.toString() + "api/users", String.class);
-        assertThat(response.getBody(), equalTo("[{\"id\":1,\"firstname\":\"Anthony\",\"lastname\":\"Stark\",\"email\":\"anthony.stark@starkindustries.com\",\"version\":\"1.0\"}]"));
+        assertThat(response.getBody(), equalTo("[" +
+                "{\"id\":1,\"firstname\":\"Tony\",\"lastname\":\"Stark\",\"email\":\"tony.stark@starkindustries.com\",\"version\":\"1.0\"}," +
+                "{\"id\":2,\"firstname\":\"Bruce\",\"lastname\":\"Wayne\",\"email\":\"bruce.wayne@wayneenterprises.com\",\"version\":\"2.0\"}" +
+                "]"));
     }
-
 }

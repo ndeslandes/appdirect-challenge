@@ -1,7 +1,37 @@
 package org.example.appdirectchallenge.service;
 
-/**
- * Created by nicolas on 2016-01-28.
- */
+import org.example.appdirectchallenge.domain.User;
+import org.example.appdirectchallenge.domain.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("api")
 public class UserService {
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    private UserRepository users;
+
+    @Autowired
+    public UserService(UserRepository users) {
+        this.users = users;
+    }
+
+    @RequestMapping("user")
+    public User getUser(@RequestParam("id") long id) {
+        log.info("Get user");
+        return users.getUser(id);
+    }
+
+    @RequestMapping("users")
+    public List<User> getUsers() {
+        log.info("Get users");
+        return users.getUsers();
+    }
 }
