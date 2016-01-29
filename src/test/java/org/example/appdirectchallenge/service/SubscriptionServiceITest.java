@@ -41,6 +41,6 @@ public class SubscriptionServiceITest {
     public void list() throws Exception {
         ResponseEntity<String> response = template.getForEntity(base + "/api/subscriptions", String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(response.getBody(), equalTo("[{\"accountId\":1,\"creatorFirstName\":\"Nicolas\",\"creatorLastName\":\"Deslandes\",\"edition\":\"FREE\"}]"));
+        assertThat(response.getBody(), equalTo("[{\"accountId\":1,\"creatorFirstName\":\"Nicolas\",\"creatorLastName\":\"Deslandes\",\"edition\":\"FREE\",\"status\":\"INITIALIZED\"}]"));
     }
 }

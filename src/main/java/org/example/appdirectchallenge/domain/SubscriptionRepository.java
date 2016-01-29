@@ -21,17 +21,18 @@ public class SubscriptionRepository {
     }
 
     public List<Subscription> list() {
-        return jdbc.query("SELECT account_id, creator_first_name, creator_last_name, edition FROM subscription", subscriptionMapper);
+        return jdbc.query("SELECT account_id, creator_first_name, creator_last_name, edition, status FROM subscription", subscriptionMapper);
     }
 
     public Long create(Subscription subscription) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(
                 connection -> {
-                    PreparedStatement ps = connection.prepareStatement("INSERT INTO subscription(creator_first_name, creator_last_name, edition) VALUES (?, ?, ?)", new String[]{"account_id"});
+                    PreparedStatement ps = connection.prepareStatement("INSERT INTO subscription(creator_first_name, creator_last_name, edition, status) VALUES (?, ?, ?, ?)", new String[]{"account_id"});
                     ps.setString(1, subscription.creatorFirstName);
                     ps.setString(2, subscription.creatorLastName);
                     ps.setString(3, subscription.edition);
+                    ps.setString(4, subscription.status);
                     return ps;
                 },
                 keyHolder);
@@ -39,7 +40,7 @@ public class SubscriptionRepository {
     }
 
     public boolean update(Subscription subscription) {
-        return jdbc.update("UPDATE subscription SET edition = ? WHERE account_id = ?", subscription.edition, subscription.accountId) != 0;
+        return jdbc.update("UPDATE subscription SET edition = ?, status = ? WHERE account_id = ?", subscription.edition, subscription.status, subscription.accountId) != 0;
     }
 
     public boolean delete(Long accountId) {
@@ -49,6 +50,7 @@ public class SubscriptionRepository {
     private static final RowMapper<Subscription> subscriptionMapper = (rs, rowNum) -> new Subscription(rs.getLong("account_id"),
             rs.getString("creator_first_name"),
             rs.getString("creator_last_name"),
-            rs.getString("edition"));
+            rs.getString("edition"),
+            rs.getString("status"));
 
 }

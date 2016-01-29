@@ -1,1 +1,1 @@
-INSERT INTO subscription(creator_first_name, creator_last_name, edition) VALUES ('Nicolas', 'Deslandes', 'FREE');
+INSERT INTO subscription(creator_first_name, creator_last_name, edition, status) VALUES ('Nicolas', 'Deslandes', 'FREE', 'INITIALIZED');

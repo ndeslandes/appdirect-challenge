@@ -44,7 +44,7 @@ public class NotificationService {
             //    return new ResponseEntity<>(new ErrorResponse("ACCOUNT_ALREADY_EXISTS", ""), HttpStatus.CONFLICT);
             //}
 
-            Long accountId = subscriptions.create(new Subscription(notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode));
+            Long accountId = subscriptions.create(new Subscription(notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode, notification.payload.account.status));
             return new ResponseEntity<>(new SuccessResponse(accountId.toString()), HttpStatus.OK);
         } catch (Exception e) {
             log.error("error", e);
@@ -52,7 +52,7 @@ public class NotificationService {
         }
     }
 
-    @RequestMapping("change")
+    @RequestMapping({"change", "status"})
     public ResponseEntity<Response> change(@RequestParam("url") String url) {
         try {
             OAuthRestTemplate rest = new OAuthRestTemplate(resource);
@@ -63,7 +63,7 @@ public class NotificationService {
             }
 
             String accountIdentifier = notification.payload.account.accountIdentifier;
-            if (subscriptions.update(new Subscription(Long.valueOf(accountIdentifier), notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode))) {
+            if (subscriptions.update(new Subscription(Long.valueOf(accountIdentifier), notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode, notification.payload.account.status))) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, "The account " + accountIdentifier + " could not be found."), HttpStatus.OK);
