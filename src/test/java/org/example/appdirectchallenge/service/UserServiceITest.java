@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -37,11 +38,10 @@ public class UserServiceITest {
     }
 
     @Test
-    public void getUsers() throws Exception {
+    public void list() throws Exception {
         ResponseEntity<String> response = template.getForEntity(base.toString() + "api/users", String.class);
-        assertThat(response.getBody(), equalTo("[" +
-                "{\"id\":1,\"firstname\":\"Tony\",\"lastname\":\"Stark\",\"email\":\"tony.stark@starkindustries.com\",\"version\":\"1.0\"}," +
-                "{\"id\":2,\"firstname\":\"Bruce\",\"lastname\":\"Wayne\",\"email\":\"bruce.wayne@wayneenterprises.com\",\"version\":\"2.0\"}" +
-                "]"));
+        assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+        assertThat(response.getBody(), equalTo("[{\"address\":{\"city\":\"Montreal\",\"country\":\"Canada\",\"firstName\":\"Nicolas\",\"fullName\":\"Nicolas Deslandes\",\"lastName\":\"Deslandes\",\"state\":\"QC\",\"street1\":\"2534 Joliette Street\",\"zip\":\"H1W 3G9\"},\"email\":\"deslandes.nicolas@gmail.com\",\"firstName\":\"Nicolas\",\"language\":\"English\",\"lastName\":\"Deslandes\",\"openId\":\"1\",\"uuid\":\"11111111-1111-1111-1111-111111111111\"}]"
+        ));
     }
 }

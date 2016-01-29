@@ -1,5 +1,6 @@
 package org.example.appdirectchallenge.service;
 
+import org.example.appdirectchallenge.domain.Address;
 import org.example.appdirectchallenge.domain.User;
 import org.example.appdirectchallenge.domain.UserRepository;
 import org.junit.Before;
@@ -33,12 +34,12 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUsers() throws Exception {
-        when(userRepository.getUsers()).thenReturn(Collections.singletonList(new User(1, "Tony", "Stark", "tony.stark@starkindustries.com", "1.0")));
+    public void list() throws Exception {
+        when(userRepository.list()).thenReturn(Collections.singletonList(new User("", "", "", "", "", "", new Address("", "", "", "", "", "", "", ""))));
 
         mvc.perform(MockMvcRequestBuilders.get("/api/users").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[{\"id\":1,\"firstname\":\"Tony\",\"lastname\":\"Stark\",\"email\":\"tony.stark@starkindustries.com\",\"version\":\"1.0\"}]")));
+                .andExpect(content().string(equalTo("[{\"address\":{\"city\":\"\",\"country\":\"\",\"firstName\":\"\",\"fullName\":\"\",\"lastName\":\"\",\"state\":\"\",\"street1\":\"\",\"zip\":\"\"},\"email\":\"\",\"firstName\":\"\",\"language\":\"\",\"lastName\":\"\",\"openId\":\"\",\"uuid\":\"\"}]")));
     }
 
 }

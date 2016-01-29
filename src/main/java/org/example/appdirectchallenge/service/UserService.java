@@ -26,6 +26,6 @@ public class UserService {
     @RequestMapping("users")
     public List<User> list() {
         log.info("Get users");
-        return users.getUsers();
+        return users.list();
     }
 }
