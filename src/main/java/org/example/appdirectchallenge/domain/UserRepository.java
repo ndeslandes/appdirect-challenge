@@ -42,6 +42,10 @@ public class UserRepository {
         return keyHolder.getKey().longValue();
     }
 
+    public void delete(String id) {
+        jdbc.update("DELETE FROM app_user WHERE id = ?", id);
+    }
+
     private static final RowMapper<User> userMapper = (rs, rowNum) -> new User(rs.getLong("id"),
             rs.getString("uuid"),
             rs.getString("email"),

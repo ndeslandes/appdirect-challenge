@@ -37,7 +37,6 @@ public class SubscriptionService {
 
     @RequestMapping("notification/create")
     public ResponseEntity<Response> subscriptionCreated(@RequestParam("url") String url) throws Exception {
-        log.info("subscriptionCreated url=" + url);
         OAuthConsumer consumer = new DefaultOAuthConsumer("challenge-77055", "m9zNfX64sSXU");
         //TODO validate request signature
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
@@ -60,6 +59,33 @@ public class SubscriptionService {
         notification.creator.edition = notification.payload.order.editionCode;
         Long userId = users.create(notification.creator);
         return new ResponseEntity<>(new Response("true", userId.toString()), HttpStatus.OK);
+        //}
+        //return new ResponseEntity<>(new Response("false", ""), HttpStatus.OK);
+    }
+
+    @RequestMapping("notification/cancel")
+    public ResponseEntity<Response> subscriptionCancelled(@RequestParam("url") String url) throws Exception {
+        OAuthConsumer consumer = new DefaultOAuthConsumer("challenge-77055", "m9zNfX64sSXU");
+        //TODO validate request signature
+        HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
+        request.setRequestProperty("Accept", "application/json");
+        consumer.sign(request);
+        request.connect();
+
+        //if (request.getResponseCode() == 200) {
+        String response = readInputStream(request.getInputStream());
+        ObjectMapper mapper = new ObjectMapper();
+        Notification notification = mapper.readValue(response, Notification.class);
+
+        //This signs a return URL:
+        //OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
+        //consumer.setSigningStrategy( new QueryStringSigningStrategy());
+        //String url = "https://www.appdirect.com/AppDirect/finishorder?success=true&accountIdentifer=Alice";
+        //String signedUrl = consumer.sign(url);
+
+        //TODO you can do better than that!
+        users.delete(notification.payload.account.accountIdentifier);
+        return new ResponseEntity<>(new Response("true", ""), HttpStatus.OK);
         //}
         //return new ResponseEntity<>(new Response("false", ""), HttpStatus.OK);
     }
