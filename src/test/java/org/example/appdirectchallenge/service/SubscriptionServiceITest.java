@@ -33,13 +33,13 @@ public class SubscriptionServiceITest {
 
     @Before
     public void setUp() throws Exception {
-        this.base = new URL("http://localhost:" + port + "/");
+        this.base = new URL("http://localhost:" + port);
         template = new TestRestTemplate();
     }
 
     @Test
     public void list() throws Exception {
-        ResponseEntity<String> response = template.getForEntity(base.toString() + "api/subscriptions", String.class);
+        ResponseEntity<String> response = template.getForEntity(base + "/api/subscriptions", String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
         assertThat(response.getBody(), equalTo("[{\"accountId\":1,\"creatorFirstName\":\"Nicolas\",\"creatorLastName\":\"Deslandes\",\"edition\":\"FREE\"}]"));
     }

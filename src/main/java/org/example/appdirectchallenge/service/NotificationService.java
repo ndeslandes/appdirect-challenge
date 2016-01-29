@@ -14,6 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth.common.signature.SharedConsumerSecretImpl;
+import org.springframework.security.oauth.common.signature.SignatureSecret;
+import org.springframework.security.oauth.consumer.BaseProtectedResourceDetails;
+import org.springframework.security.oauth.consumer.ProtectedResourceDetails;
+import org.springframework.security.oauth.consumer.client.OAuthRestTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,9 +37,12 @@ public class NotificationService {
 
     private SubscriptionRepository subscriptions;
 
+    private final OAuthRestTemplate rest;
+
     @Autowired
-    public NotificationService(SubscriptionRepository subscriptions) {
+    public NotificationService(SubscriptionRepository subscriptions, ProtectedResourceDetails resource) {
         this.subscriptions = subscriptions;
+        this.rest = new OAuthRestTemplate(resource);
     }
 
     @RequestMapping("create")
@@ -109,26 +117,31 @@ public class NotificationService {
     }
 
     private Notification getNotification(String url) throws IOException, OAuthCommunicationException, OAuthExpectationFailedException, OAuthMessageSignerException {
-        String consumerKey = System.getenv("CONSUMER_KEY");
-        String consumerSecret = System.getenv("CONSUMER_SECRET");
-        OAuthConsumer consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
-        HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
-        request.setRequestProperty("Accept", "application/json");
-        consumer.sign(request);
-        request.connect();
-        String response = readInputStream(request.getInputStream());
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(response, Notification.class);
+        //BaseProtectedResourceDetails protectedResourceDetails = new BaseProtectedResourceDetails();
+        //protectedResourceDetails.setConsumerKey(System.getenv("CONSUMER_KEY"));
+        //protectedResourceDetails.setSharedSecret(new SharedConsumerSecretImpl(System.getenv("CONSUMER_SECRET")));
+        //OAuthRestTemplate rest = new OAuthRestTemplate(protectedResourceDetails);
+        return rest.getForObject(url, Notification.class);
+
+
+        //OAuthConsumer consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
+        //HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
+        //request.setRequestProperty("Accept", "application/json");
+        //consumer.sign(request);
+        //request.connect();
+        //String response = readInputStream(request.getInputStream());
+        //ObjectMapper mapper = new ObjectMapper();
+        //return mapper.readValue(response, Notification.class);
     }
 
-    private String readInputStream(InputStream inputStream) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuilder sb = new StringBuilder();
-        String output;
-        while ((output = br.readLine()) != null) {
-            sb.append(output);
-        }
-        return sb.toString();
-    }
+    //private String readInputStream(InputStream inputStream) throws IOException {
+    //   BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+    //    StringBuilder sb = new StringBuilder();
+    //    String output;
+    //    while ((output = br.readLine()) != null) {
+    //        sb.append(output);
+    //    }
+    //    return sb.toString();
+    //}
 
 }
