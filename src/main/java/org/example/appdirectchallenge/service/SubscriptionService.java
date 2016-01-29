@@ -35,8 +35,8 @@ public class SubscriptionService {
         this.users = users;
     }
 
-    @RequestMapping("notification/create")
-    public ResponseEntity<Response> subscriptionCreated(@RequestParam("url") String url) throws Exception {
+    @RequestMapping("create")
+    public ResponseEntity<Response> create(@RequestParam("url") String url) throws Exception {
         OAuthConsumer consumer = new DefaultOAuthConsumer("challenge-77055", "m9zNfX64sSXU");
         //TODO validate request signature
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
@@ -63,8 +63,8 @@ public class SubscriptionService {
         //return new ResponseEntity<>(new Response("false", ""), HttpStatus.OK);
     }
 
-    @RequestMapping("notification/cancel")
-    public ResponseEntity<Response> subscriptionCancelled(@RequestParam("url") String url) throws Exception {
+    @RequestMapping("cancel")
+    public ResponseEntity<Response> cancel(@RequestParam("url") String url) throws Exception {
         OAuthConsumer consumer = new DefaultOAuthConsumer("challenge-77055", "m9zNfX64sSXU");
         //TODO validate request signature
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
