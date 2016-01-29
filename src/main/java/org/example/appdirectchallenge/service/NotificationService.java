@@ -59,6 +59,25 @@ public class NotificationService {
         }
     }
 
+    @RequestMapping("change")
+    public ResponseEntity<Response> change(@RequestParam("url") String url) throws OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
+        try {
+            if (validateSignature()) {
+                Notification notification = getNotification(url);
+                String accountIdentifier = notification.payload.account.accountIdentifier;
+                if (subscriptions.update(new Subscription(Long.valueOf(accountIdentifier), notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode))) {
+                    return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(new ErrorResponse("ACCOUNT_NOT_FOUND", "The account " + accountIdentifier + " could not be found."), HttpStatus.OK);
+                }
+            } else {
+                return new ResponseEntity<>(new ErrorResponse("UNAUTHORIZED", ""), HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse("UNKNOWN_ERROR", ""), HttpStatus.OK);
+        }
+    }
+
     @RequestMapping("cancel")
     public ResponseEntity<Response> cancel(@RequestParam("url") String url) throws OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
         try {

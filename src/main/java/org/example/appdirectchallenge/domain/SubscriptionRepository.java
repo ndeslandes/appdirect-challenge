@@ -38,6 +38,10 @@ public class SubscriptionRepository {
         return keyHolder.getKey().longValue();
     }
 
+    public boolean update(Subscription subscription) {
+        return jdbc.update("UPDATE subscription SET edition = ? WHERE account_id = ?", subscription.edition, subscription.accountId) != 0;
+    }
+
     public boolean delete(Long accountId) {
         return jdbc.update("DELETE FROM subscription WHERE account_id = ?", accountId) != 0;
     }
