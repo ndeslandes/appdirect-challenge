@@ -3,12 +3,11 @@ package org.example.appdirectchallenge.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.org.apache.xpath.internal.operations.String;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Notification {
 
-    public String type;
+    public Type type;
     public MarketPlace marketplace;
     public String applicationUuid;
     public String flag;
@@ -16,7 +15,7 @@ public class Notification {
     public Payload payload;
 
     @JsonCreator
-    public Notification(@JsonProperty("type") String type,
+    public Notification(@JsonProperty("type") Type type,
                         @JsonProperty("marketplace") MarketPlace marketplace,
                         @JsonProperty("applicationUuid") String applicationUuid,
                         @JsonProperty("flag") String flag,
