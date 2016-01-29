@@ -18,7 +18,7 @@ public class Notification {
 
     @JsonCreator
     public Notification(@JsonProperty("type") Type type,
-                        @JsonProperty("marketPlace") MarketPlace marketPlace,
+                        @JsonProperty("marketplace") MarketPlace marketPlace,
                         @JsonProperty("applicationUuid") String applicationUuid,
                         @JsonProperty("flag") String flag,
                         @JsonProperty("returnUrl") String returnUrl,
