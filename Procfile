@@ -1,0 +1,1 @@
+web: java -Dserver.port=$PORT -jar  target/appdirect-challenge-1.jar
