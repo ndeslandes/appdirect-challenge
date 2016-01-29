@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
-    public Address address;
+    public Long id;
     public String email;
     public String firstName;
     public String language;
@@ -16,20 +16,20 @@ public class User {
     public String uuid;
 
     @JsonCreator
-    public User(@JsonProperty("uuid") String uuid,
+    public User(@JsonProperty("id") Long id,
+                @JsonProperty("uuid") String uuid,
                 @JsonProperty("email") String email,
                 @JsonProperty("firstName") String firstName,
                 @JsonProperty("lastName") String lastName,
                 @JsonProperty("language") String language,
-                @JsonProperty("openId") String openId,
-                @JsonProperty("address") Address address) {
+                @JsonProperty("openId") String openId) {
+        this.id = id;
         this.uuid = uuid;
         this.email = email;
         this.firstName = firstName;
         this.language = language;
         this.lastName = lastName;
         this.openId = openId;
-        this.address = address;
     }
 
 }

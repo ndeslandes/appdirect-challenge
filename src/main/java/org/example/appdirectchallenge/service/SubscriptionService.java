@@ -10,6 +10,8 @@ import org.example.appdirectchallenge.domain.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,31 +36,30 @@ public class SubscriptionService {
     }
 
     @RequestMapping("notification/create")
-    public Response subscriptionCreated(@RequestParam("url") String url) throws Exception {
+    public ResponseEntity<Response> subscriptionCreated(@RequestParam("url") String url) throws Exception {
         log.info("subscriptionCreated url=" + url);
+        OAuthConsumer consumer = new DefaultOAuthConsumer("challenge-77055", "m9zNfX64sSXU");
         //TODO validate request signature
-
-        OAuthConsumer consumer = new DefaultOAuthConsumer("challenge-77055", "wgUqWZjxYW7J4Cs1");
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
         request.setRequestProperty("Accept", "application/json");
         consumer.sign(request);
         request.connect();
-        if (request.getResponseCode() == 200) {
-            String response = readInputStream(request.getInputStream());
-            ObjectMapper mapper = new ObjectMapper();
-            Notification notification = mapper.readValue(response, Notification.class);
 
-            //This signs a return URL:
-            //OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
-            //consumer.setSigningStrategy( new QueryStringSigningStrategy());
-            //String url = "https://www.appdirect.com/AppDirect/finishorder?success=true&accountIdentifer=Alice";
-            //String signedUrl = consumer.sign(url);
+        //if (request.getResponseCode() == 200) {
+        String response = readInputStream(request.getInputStream());
+        ObjectMapper mapper = new ObjectMapper();
+        Notification notification = mapper.readValue(response, Notification.class);
 
-            users.create(notification.creator);
+        //This signs a return URL:
+        //OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
+        //consumer.setSigningStrategy( new QueryStringSigningStrategy());
+        //String url = "https://www.appdirect.com/AppDirect/finishorder?success=true&accountIdentifer=Alice";
+        //String signedUrl = consumer.sign(url);
 
-            return new Response("true", "");
-        }
-        return new Response("false", null);
+        Long userId = users.create(notification.creator);
+        return new ResponseEntity<>(new Response("true", userId.toString()), HttpStatus.OK);
+        //}
+        //return new ResponseEntity<>(new Response("false", ""), HttpStatus.OK);
     }
 
     private String readInputStream(InputStream inputStream) throws IOException {
@@ -70,4 +71,5 @@ public class SubscriptionService {
         }
         return sb.toString();
     }
+
 }

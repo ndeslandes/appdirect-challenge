@@ -1,2 +1,1 @@
-INSERT INTO app_address(firstName, lastName, fullName, street1, zip, city, state, country) VALUES ('Nicolas', 'Deslandes', 'Nicolas Deslandes', '2534 Joliette Street', 'H1W 3G9', 'Montreal', 'QC', 'Canada');
-INSERT INTO app_user(uuid, email, firstName, lastName, userLanguage, openId, idAddress) VALUES ('11111111-1111-1111-1111-111111111111', 'deslandes.nicolas@gmail.com', 'Nicolas', 'Deslandes', 'English', '1', 1);
+INSERT INTO app_user(uuid, email, firstName, lastName, userLanguage, openId) VALUES ('11111111-1111-1111-1111-111111111111', 'deslandes.nicolas@gmail.com', 'Nicolas', 'Deslandes', 'English', '1');
