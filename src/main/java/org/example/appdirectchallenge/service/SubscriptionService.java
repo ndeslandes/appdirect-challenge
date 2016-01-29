@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import org.example.appdirectchallenge.domain.Notification;
+import org.example.appdirectchallenge.domain.Response;
 import org.example.appdirectchallenge.domain.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +34,9 @@ public class SubscriptionService {
     }
 
     @RequestMapping("notification/create")
-    public void subscriptionCreated(@RequestParam("url") String url) throws Exception {
+    public Response subscriptionCreated(@RequestParam("url") String url) throws Exception {
         log.info("subscriptionCreated url=" + url);
         //TODO validate request signature
-
-        //TODO be asynchronous
 
         OAuthConsumer consumer = new DefaultOAuthConsumer("challenge-77055", "wgUqWZjxYW7J4Cs1");
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
@@ -46,8 +45,6 @@ public class SubscriptionService {
         request.connect();
         if (request.getResponseCode() == 200) {
             String response = readInputStream(request.getInputStream());
-            log.info(response);
-
             ObjectMapper mapper = new ObjectMapper();
             Notification notification = mapper.readValue(response, Notification.class);
 
@@ -58,7 +55,10 @@ public class SubscriptionService {
             //String signedUrl = consumer.sign(url);
 
             users.create(notification.creator);
+
+            return new Response("true", "");
         }
+        return new Response("false", null);
     }
 
     private String readInputStream(InputStream inputStream) throws IOException {
