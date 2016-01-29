@@ -3,7 +3,6 @@ package org.example.appdirectchallenge.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.org.apache.xpath.internal.operations.String;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MarketPlace {

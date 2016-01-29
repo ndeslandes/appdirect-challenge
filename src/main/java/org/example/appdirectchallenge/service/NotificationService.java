@@ -109,7 +109,9 @@ public class NotificationService {
     }
 
     private Notification getNotification(String url) throws IOException, OAuthCommunicationException, OAuthExpectationFailedException, OAuthMessageSignerException {
-        OAuthConsumer consumer = new DefaultOAuthConsumer("appdirect-challenge-77081", "hFVd5c6NCltoFaNB");
+        String consumerKey = System.getenv("CONSUMER_KEY");
+        String consumerSecret = System.getenv("CONSUMER_SECRET");
+        OAuthConsumer consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
         request.setRequestProperty("Accept", "application/json");
         consumer.sign(request);
