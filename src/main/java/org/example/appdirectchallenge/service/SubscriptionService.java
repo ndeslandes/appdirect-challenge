@@ -37,9 +37,11 @@ public class SubscriptionService {
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
         consumer.sign(request);
         request.connect();
+        String responseMessage = request.getResponseMessage();
+        log.info(responseMessage);
 
         ObjectMapper mapper = new ObjectMapper();
-        Notification notification = mapper.readValue(request.getResponseMessage(), Notification.class);
+        Notification notification = mapper.readValue(responseMessage, Notification.class);
 
         //This signs a return URL:
         //OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
