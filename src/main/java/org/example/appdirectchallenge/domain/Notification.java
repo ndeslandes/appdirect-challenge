@@ -1,16 +1,22 @@
 package org.example.appdirectchallenge.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Notification {
 
-    public Type type;
+    public String type;
     public Marketplace marketplace;
     public User creator;
     public Payload payload;
 
-    public Notification(Type type, Marketplace marketplace, User creator, Payload payload) {
+    @JsonCreator
+    public Notification(@JsonProperty("type") String type,
+                        @JsonProperty("marketplace") Marketplace marketplace,
+                        @JsonProperty("creator") User creator,
+                        @JsonProperty("payload") Payload payload) {
         this.type = type;
         this.marketplace = marketplace;
         this.creator = creator;
@@ -22,7 +28,9 @@ public class Notification {
         public String baseUrl;
         public String partner;
 
-        public Marketplace(String baseUrl, String partner) {
+        @JsonCreator
+        public Marketplace(@JsonProperty("baseUrl") String baseUrl,
+                           @JsonProperty("partner") String partner) {
             this.baseUrl = baseUrl;
             this.partner = partner;
         }
@@ -34,7 +42,9 @@ public class Notification {
         public Account account;
         public Order order;
 
-        public Payload(Account account, Order order) {
+        @JsonCreator
+        public Payload(@JsonProperty("account") Account account,
+                       @JsonProperty("order") Order order) {
             this.account = account;
             this.order = order;
         }
@@ -46,7 +56,9 @@ public class Notification {
         public String accountIdentifier;
         public String status;
 
-        public Account(String accountIdentifier, String status) {
+        @JsonCreator
+        public Account(@JsonProperty("accountIdentifier") String accountIdentifier,
+                       @JsonProperty("status") String status) {
             this.accountIdentifier = accountIdentifier;
             this.status = status;
         }
@@ -59,7 +71,10 @@ public class Notification {
         public String pricingDuration;
         public Item item;
 
-        public Order(String editionCode, String pricingDuration, Item item) {
+        @JsonCreator
+        public Order(@JsonProperty("editionCode") String editionCode,
+                     @JsonProperty("pricingDuration") String pricingDuration,
+                     @JsonProperty("item") Item item) {
             this.editionCode = editionCode;
             this.pricingDuration = pricingDuration;
             this.item = item;
@@ -72,14 +87,13 @@ public class Notification {
         public String quantity;
         public String unit;
 
-        public Item(String quantity, String unit) {
+        @JsonCreator
+        public Item(@JsonProperty("quantity") String quantity,
+                    @JsonProperty("unit") String unit) {
             this.quantity = quantity;
             this.unit = unit;
         }
 
     }
 
-    public enum Type {
-        SUBSCRIPTION_ORDER
-    }
 }
