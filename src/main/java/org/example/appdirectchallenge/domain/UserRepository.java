@@ -34,23 +34,26 @@ public class UserRepository {
     public void create(User user) {
         Address address = user.address;
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update(
-                connection -> {
-                    PreparedStatement ps = connection.prepareStatement("INSERT INTO app_address(firstName, lastName, fullName, street1, zip, city, state, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", new String[] {"id"});
-                    ps.setString(1, address.firstName);
-                    ps.setString(1, address.lastName);
-                    ps.setString(1, address.fullName);
-                    ps.setString(1, address.street1);
-                    ps.setString(1, address.zip);
-                    ps.setString(1, address.city);
-                    ps.setString(1, address.state);
-                    ps.setString(1, address.country);
-                    return ps;
-                },
-                keyHolder);
+        KeyHolder keyHolder = null;
+        if (address != null) {
+            keyHolder = new GeneratedKeyHolder();
+            jdbc.update(
+                    connection -> {
+                        PreparedStatement ps = connection.prepareStatement("INSERT INTO app_address(firstName, lastName, fullName, street1, zip, city, state, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", new String[]{"id"});
+                        ps.setString(1, address.firstName);
+                        ps.setString(1, address.lastName);
+                        ps.setString(1, address.fullName);
+                        ps.setString(1, address.street1);
+                        ps.setString(1, address.zip);
+                        ps.setString(1, address.city);
+                        ps.setString(1, address.state);
+                        ps.setString(1, address.country);
+                        return ps;
+                    },
+                    keyHolder);
+        }
 
-        jdbc.update("INSERT INTO app_user(uuid, email, firstName, lastName, userLanguage, openId, idAddress) VALUES (?, ?, ?, ?, ?, ?, ?);", user.uuid, user.email, user.firstName, user.lastName, user.language, user.openId, keyHolder.getKey());
+        jdbc.update("INSERT INTO app_user(uuid, email, firstName, lastName, userLanguage, openId, idAddress) VALUES (?, ?, ?, ?, ?, ?, ?);", user.uuid, user.email, user.firstName, user.lastName, user.language, user.openId, keyHolder != null?keyHolder.getKey():null);
     }
 
     private static final RowMapper<User> userMapper = (rs, rowNum) -> new User(rs.getString("uuid"),
