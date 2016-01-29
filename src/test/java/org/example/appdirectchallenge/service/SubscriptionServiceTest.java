@@ -1,7 +1,7 @@
 package org.example.appdirectchallenge.service;
 
-import org.example.appdirectchallenge.domain.User;
-import org.example.appdirectchallenge.domain.UserRepository;
+import org.example.appdirectchallenge.domain.Subscription;
+import org.example.appdirectchallenge.domain.SubscriptionRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,25 +20,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceTest {
+public class SubscriptionServiceTest {
 
     private MockMvc mvc;
 
     @Mock
-    private UserRepository userRepository;
+    private SubscriptionRepository subscriptions;
 
     @Before
     public void setUp() throws Exception {
-        mvc = MockMvcBuilders.standaloneSetup(new UserService(userRepository)).build();
+        mvc = MockMvcBuilders.standaloneSetup(new SubscriptionService(subscriptions)).build();
     }
 
     @Test
     public void list() throws Exception {
-        when(userRepository.list()).thenReturn(Collections.singletonList(new User(1L, "", "", "", "", "", "", "")));
+        when(subscriptions.list()).thenReturn(Collections.singletonList(new Subscription(1L, "", "", "")));
 
-        mvc.perform(MockMvcRequestBuilders.get("/api/users").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get("/api/subscriptions").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[{\"id\":1,\"uuid\":\"\",\"email\":\"\",\"firstName\":\"\",\"lastName\":\"\",\"language\":\"\",\"openId\":\"\",\"edition\":\"\"}]")));
+                .andExpect(content().string(equalTo("[{\"accountId\":1,\"creatorFirstName\":\"\",\"creatorLastName\":\"\",\"edition\":\"\"}]")));
     }
 
 }

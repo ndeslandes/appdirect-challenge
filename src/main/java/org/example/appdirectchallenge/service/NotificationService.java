@@ -1,0 +1,110 @@
+package org.example.appdirectchallenge.service;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.basic.DefaultOAuthConsumer;
+import oauth.signpost.exception.OAuthCommunicationException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
+import org.example.appdirectchallenge.domain.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+@RestController
+@RequestMapping("api/subscription")
+public class NotificationService {
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    private SubscriptionRepository subscriptions;
+
+    @Autowired
+    public NotificationService(SubscriptionRepository subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
+    @RequestMapping("create")
+    public ResponseEntity<Response> create(@RequestParam("url") String url) throws Exception {
+        try {
+            if (validateSignature()) {
+                Notification notification = getNotification(url);
+
+                //TODO check unicity
+                //if(users.read() != null) {
+                //    return new ResponseEntity<>(new ErrorResponse("USER_ALREADY_EXISTS", ""), HttpStatus.CONFLICT);
+                //}
+
+                Long userId = subscriptions.create(new Subscription(notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode));
+                return new ResponseEntity<>(new SuccessResponse(userId.toString()), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new ErrorResponse("UNAUTHORIZED", ""), HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse("UNKNOWN_ERROR", ""), HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping("cancel")
+    public ResponseEntity<Response> cancel(@RequestParam("url") String url) throws OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
+        try {
+            if (validateSignature()) {
+                Notification notification = getNotification(url);
+                String accountIdentifier = notification.payload.account.accountIdentifier;
+                if (subscriptions.delete(Long.valueOf(accountIdentifier))) {
+                    return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(new ErrorResponse("ACCOUNT_NOT_FOUND", "The account " + accountIdentifier + " could not be found."), HttpStatus.OK);
+                }
+            } else {
+                return new ResponseEntity<>(new ErrorResponse("UNAUTHORIZED", ""), HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse("UNKNOWN_ERROR", ""), HttpStatus.OK);
+        }
+    }
+
+    private boolean validateSignature() {
+        //TODO validate signature
+        //This signs a return URL:
+        //OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
+        //consumer.setSigningStrategy( new QueryStringSigningStrategy());
+        //String url = "https://www.appdirect.com/AppDirect/finishorder?success=true&accountIdentifer=Alice";
+        //String signedUrl = consumer.sign(url);
+        return true;
+    }
+
+    private Notification getNotification(String url) throws IOException, OAuthCommunicationException, OAuthExpectationFailedException, OAuthMessageSignerException {
+        OAuthConsumer consumer = new DefaultOAuthConsumer("appdirect-challenge-77081", "hFVd5c6NCltoFaNB");
+        HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
+        request.setRequestProperty("Accept", "application/json");
+        consumer.sign(request);
+        request.connect();
+        String response = readInputStream(request.getInputStream());
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(response, Notification.class);
+    }
+
+    private String readInputStream(InputStream inputStream) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder sb = new StringBuilder();
+        String output;
+        while ((output = br.readLine()) != null) {
+            sb.append(output);
+        }
+        return sb.toString();
+    }
+
+}

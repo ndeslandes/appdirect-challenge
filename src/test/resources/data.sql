@@ -1,1 +1,1 @@
-INSERT INTO app_user(uuid, email, firstName, lastName, userLanguage, openId, edition) VALUES ('11111111-1111-1111-1111-111111111111', 'deslandes.nicolas@gmail.com', 'Nicolas', 'Deslandes', 'English', '1', 'FREE');
+INSERT INTO subscription(creatorFirstName, creatorLastName, edition) VALUES ('Nicolas', 'Deslandes', 'FREE');

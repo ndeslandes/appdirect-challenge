@@ -23,7 +23,7 @@ import static org.junit.Assert.assertThat;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=0"})
-public class UserServiceITest {
+public class SubscriptionServiceITest {
 
     @Value("${local.server.port}")
     private int port;
@@ -39,8 +39,8 @@ public class UserServiceITest {
 
     @Test
     public void list() throws Exception {
-        ResponseEntity<String> response = template.getForEntity(base.toString() + "api/users", String.class);
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "api/subscriptions", String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(response.getBody(), equalTo("[{\"id\":1,\"uuid\":\"11111111-1111-1111-1111-111111111111\",\"email\":\"deslandes.nicolas@gmail.com\",\"firstName\":\"Nicolas\",\"lastName\":\"Deslandes\",\"language\":\"English\",\"openId\":\"1\",\"edition\":\"FREE\"}]"));
+        assertThat(response.getBody(), equalTo("[{\"accountId\":1,\"creatorFirstName\":\"Nicolas\",\"creatorLastName\":\"Deslandes\",\"edition\":\"FREE\"}]"));
     }
 }
