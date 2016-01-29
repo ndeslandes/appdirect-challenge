@@ -19,12 +19,8 @@ public class UserRepository {
         this.jdbc = jdbc;
     }
 
-    public User getUser(long id) {
-        return jdbc.queryForObject("SELECT * FROM sb_user WHERE id=?", userMapper, id);
-    }
-
     public List<User> getUsers() {
-        return jdbc.query("SELECT * FROM sb_user", userMapper);
+        return jdbc.query("SELECT * FROM app_user", userMapper);
     }
 
     private static final RowMapper<User> userMapper = new RowMapper<User>() {
