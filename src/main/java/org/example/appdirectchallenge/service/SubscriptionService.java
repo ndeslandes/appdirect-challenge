@@ -1,16 +1,20 @@
 package org.example.appdirectchallenge.service;
 
 
-import org.example.appdirectchallenge.domain.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.basic.DefaultOAuthConsumer;
+import org.example.appdirectchallenge.domain.Notification;
+import org.example.appdirectchallenge.domain.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 @RestController
 @RequestMapping("api/subscription")
@@ -25,10 +29,24 @@ public class SubscriptionService {
     }
 
     @RequestMapping("notification/create")
-    public void subscriptionCreated(@RequestParam("url") String url) {
+    public void subscriptionCreated(@RequestParam("url") String url) throws Exception {
         log.info("subscriptionCreated url=" + url);
-        RestTemplate restTemplate = new RestTemplate();
-        Notification notification = restTemplate.getForObject(url, Notification.class);
+        //TODO validate request signature
+
+        OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
+        HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
+        consumer.sign(request);
+        request.connect();
+
+        ObjectMapper mapper = new ObjectMapper();
+        Notification notification = mapper.readValue(request.getResponseMessage(), Notification.class);
+
+        //This signs a return URL:
+        //OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret");
+        //consumer.setSigningStrategy( new QueryStringSigningStrategy());
+        //String url = "https://www.appdirect.com/AppDirect/finishorder?success=true&accountIdentifer=Alice";
+        //String signedUrl = consumer.sign(url);
+
         users.create(notification.creator);
     }
 }

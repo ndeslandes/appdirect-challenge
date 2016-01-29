@@ -1,5 +1,8 @@
 package org.example.appdirectchallenge.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Address {
 
     public String city;
