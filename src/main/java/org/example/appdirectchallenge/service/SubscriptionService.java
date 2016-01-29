@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @RestController
-@RequestMapping({"api", "subscription"})
+@RequestMapping("api/subscription")
 public class SubscriptionService {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -24,7 +24,7 @@ public class SubscriptionService {
         this.users = users;
     }
 
-    @RequestMapping({"notification", "create"})
+    @RequestMapping("notification/create")
     public void subscriptionCreated(@RequestParam("url") String url) {
         log.info("subscriptionCreated url=" + url);
         RestTemplate restTemplate = new RestTemplate();
