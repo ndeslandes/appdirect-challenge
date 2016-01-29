@@ -12,8 +12,8 @@ public class Payload {
     public Order order;
 
     @JsonCreator
-    public Payload(@JsonProperty("account") Account account,
-                   @JsonProperty("user") User user,
+    public Payload(@JsonProperty("user") User user,
+                   @JsonProperty("account") Account account,
                    @JsonProperty("order") Order order) {
         this.account = account;
         this.user = user;

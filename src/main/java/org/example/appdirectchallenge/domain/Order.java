@@ -9,15 +9,12 @@ public class Order {
 
     public String editionCode;
     public String pricingDuration;
-    public Item item;
 
     @JsonCreator
     public Order(@JsonProperty("editionCode") String editionCode,
-                 @JsonProperty("pricingDuration") String pricingDuration,
-                 @JsonProperty("item") Item item) {
+                 @JsonProperty("pricingDuration") String pricingDuration) {
         this.editionCode = editionCode;
         this.pricingDuration = pricingDuration;
-        this.item = item;
     }
 
 }

@@ -12,7 +12,6 @@ public class Notification {
     public MarketPlace marketplace;
     public String applicationUuid;
     public String flag;
-    public String returnUrl;
     public User creator;
     public Payload payload;
 
@@ -21,14 +20,12 @@ public class Notification {
                         @JsonProperty("marketplace") MarketPlace marketplace,
                         @JsonProperty("applicationUuid") String applicationUuid,
                         @JsonProperty("flag") String flag,
-                        @JsonProperty("returnUrl") String returnUrl,
                         @JsonProperty("creator") User creator,
                         @JsonProperty("payload") Payload payload) {
         this.type = type;
         this.marketplace = marketplace;
         this.applicationUuid = applicationUuid;
         this.flag = flag;
-        this.returnUrl = returnUrl;
         this.creator = creator;
         this.payload = payload;
     }

@@ -16,17 +16,15 @@ public class User {
     public String openId;
     public String uuid;
     public Address address;
-    public List<String> attributes;
 
     @JsonCreator
     public User(@JsonProperty("uuid") String uuid,
+                @JsonProperty("openId") String openId,
                 @JsonProperty("email") String email,
                 @JsonProperty("firstName") String firstName,
                 @JsonProperty("lastName") String lastName,
                 @JsonProperty("language") String language,
-                @JsonProperty("openId") String openId,
-                @JsonProperty("address") Address address,
-                @JsonProperty("attributes") List<String> attributes) {
+                @JsonProperty("address") Address address) {
         this.uuid = uuid;
         this.email = email;
         this.firstName = firstName;
@@ -34,7 +32,6 @@ public class User {
         this.lastName = lastName;
         this.openId = openId;
         this.address = address;
-        this.attributes = attributes;
     }
 
 }
