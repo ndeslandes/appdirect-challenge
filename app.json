@@ -1,0 +1,6 @@
+{
+  "name": "AppDirect Challenge",
+  "description": "AppDirect Challenge",
+  "image": "heroku/java",
+  "addons": [ "heroku-postgresql" ]
+}
