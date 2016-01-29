@@ -8,6 +8,7 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import org.example.appdirectchallenge.domain.*;
+import org.example.appdirectchallenge.domain.ErrorResponse.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +52,11 @@ public class NotificationService {
                 return new ResponseEntity<>(new SuccessResponse(accountId.toString()), HttpStatus.OK);
             } else {
                 log.warn("unauthorized");
-                return new ResponseEntity<>(new ErrorResponse("UNAUTHORIZED", ""), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNAUTHORIZED, ""), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
             log.error("error", e);
-            return new ResponseEntity<>(new ErrorResponse("UNKNOWN_ERROR", ""), HttpStatus.OK);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNKNOWN_ERROR, ""), HttpStatus.OK);
         }
     }
 
@@ -68,13 +69,13 @@ public class NotificationService {
                 if (subscriptions.update(new Subscription(Long.valueOf(accountIdentifier), notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode))) {
                     return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<>(new ErrorResponse("ACCOUNT_NOT_FOUND", "The account " + accountIdentifier + " could not be found."), HttpStatus.OK);
+                    return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, "The account " + accountIdentifier + " could not be found."), HttpStatus.OK);
                 }
             } else {
-                return new ResponseEntity<>(new ErrorResponse("UNAUTHORIZED", ""), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNAUTHORIZED, ""), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse("UNKNOWN_ERROR", ""), HttpStatus.OK);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNKNOWN_ERROR, e.getMessage()), HttpStatus.OK);
         }
     }
 
@@ -87,13 +88,13 @@ public class NotificationService {
                 if (subscriptions.delete(Long.valueOf(accountIdentifier))) {
                     return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<>(new ErrorResponse("ACCOUNT_NOT_FOUND", "The account " + accountIdentifier + " could not be found."), HttpStatus.OK);
+                    return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, "The account " + accountIdentifier + " could not be found."), HttpStatus.OK);
                 }
             } else {
-                return new ResponseEntity<>(new ErrorResponse("UNAUTHORIZED", ""), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNAUTHORIZED, ""), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse("UNKNOWN_ERROR", ""), HttpStatus.OK);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNKNOWN_ERROR, e.getMessage()), HttpStatus.OK);
         }
     }
 
