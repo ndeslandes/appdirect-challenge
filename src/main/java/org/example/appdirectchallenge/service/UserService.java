@@ -23,14 +23,8 @@ public class UserService {
         this.users = users;
     }
 
-    @RequestMapping("user")
-    public User getUser(@RequestParam("id") long id) {
-        log.info("Get user");
-        return users.getUser(id);
-    }
-
     @RequestMapping("users")
-    public List<User> getUsers() {
+    public List<User> list() {
         log.info("Get users");
         return users.getUsers();
     }
