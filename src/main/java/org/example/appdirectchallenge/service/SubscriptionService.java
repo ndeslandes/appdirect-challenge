@@ -65,7 +65,7 @@ public class SubscriptionService {
 
     @RequestMapping("cancel")
     public ResponseEntity<Response> cancel(@RequestParam("url") String url) throws Exception {
-        OAuthConsumer consumer = new DefaultOAuthConsumer("challenge-77055", "m9zNfX64sSXU");
+        OAuthConsumer consumer = new DefaultOAuthConsumer("appdirect-challenge-77081", "hFVd5c6NCltoFaNB");
         //TODO validate request signature
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
         request.setRequestProperty("Accept", "application/json");
