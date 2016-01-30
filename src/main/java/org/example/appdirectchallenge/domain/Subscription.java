@@ -2,23 +2,20 @@ package org.example.appdirectchallenge.domain;
 
 public class Subscription {
 
-    public Long accountId;
-    public String creatorFirstName;
-    public String creatorLastName;
+    public Long id;
+    public String companyName;
     public String edition;
     public String status;
 
-    public Subscription(String creatorFirstName, String creatorLastName, String edition, String status) {
-        this.creatorFirstName = creatorFirstName;
-        this.creatorLastName = creatorLastName;
+    public Subscription(String companyName, String edition, String status) {
+        this.companyName = companyName;
         this.edition = edition;
         this.status = status;
     }
 
-    public Subscription(Long accountId, String creatorFirstName, String creatorLastName, String edition, String status) {
-        this.accountId = accountId;
-        this.creatorFirstName = creatorFirstName;
-        this.creatorLastName = creatorLastName;
+    public Subscription(Long id, String companyName, String edition, String status) {
+        this.id = id;
+        this.companyName = companyName;
         this.edition = edition;
         this.status = status;
     }

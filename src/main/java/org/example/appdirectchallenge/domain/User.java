@@ -1,14 +1,32 @@
 package org.example.appdirectchallenge.domain;
 
-import java.util.List;
-
 public class User {
 
-    public String username;
-    public List<String> authorities;
+    public Long id;
+    public String openId;
+    public String firstname;
+    public String lastname;
+    public String email;
+    public Long subscriptionId;
 
-    public User(String username, List<String> authorities) {
-        this.username = username;
-        this.authorities = authorities;
+    public User(String email) {
+        this.email = email;
+    }
+
+    public User(String openId, String firstname, String lastname, String email, Long subscriptionId) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.openId = openId;
+        this.email = email;
+        this.subscriptionId = subscriptionId;
+    }
+
+    public User(Long id, String openId, String firstname, String lastname, String email, Long subscriptionId) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.openId = openId;
+        this.email = email;
+        this.subscriptionId = subscriptionId;
     }
 }

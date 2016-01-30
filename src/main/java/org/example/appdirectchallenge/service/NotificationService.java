@@ -1,9 +1,9 @@
 package org.example.appdirectchallenge.service;
 
-
 import org.example.appdirectchallenge.domain.*;
 import org.example.appdirectchallenge.domain.ErrorResponse.ErrorCode;
 import org.example.appdirectchallenge.domain.appdirect.Account;
+import org.example.appdirectchallenge.domain.appdirect.AppDirectUser;
 import org.example.appdirectchallenge.domain.appdirect.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +22,13 @@ public class NotificationService {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private SubscriptionRepository subscriptions;
-
+    private UserRepository users;
     private ProtectedResourceDetails resource;
 
     @Autowired
-    public NotificationService(SubscriptionRepository subscriptions, ProtectedResourceDetails resource) {
+    public NotificationService(SubscriptionRepository subscriptions, UserRepository users, ProtectedResourceDetails resource) {
         this.subscriptions = subscriptions;
+        this.users = users;
         this.resource = resource;
     }
 
@@ -46,13 +47,14 @@ public class NotificationService {
             //    return new ResponseEntity<>(new ErrorResponse("ACCOUNT_ALREADY_EXISTS", ""), HttpStatus.CONFLICT);
             //}
 
-            log.info(notification.creator.openId);
-
+            AppDirectUser creator = notification.creator;
             Account account = notification.payload.account;
-            Long accountId = subscriptions.create(new Subscription(notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode, account != null?account.status:null));
-            return new ResponseEntity<>(new SuccessResponse(accountId.toString()), HttpStatus.OK);
+
+            Long subscriptionId = subscriptions.create(new Subscription(notification.payload.company.name, notification.payload.order.editionCode, account!=null?account.status:null));
+            users.create(new User(creator.openId, creator.firstName, creator.lastName, creator.email, subscriptionId));
+
+            return new ResponseEntity<>(new SuccessResponse(subscriptionId.toString()), HttpStatus.OK);
         } catch (Exception e) {
-            log.error("error", e);
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNKNOWN_ERROR, ""), HttpStatus.OK);
         }
     }
@@ -68,7 +70,7 @@ public class NotificationService {
             }
 
             String accountIdentifier = notification.payload.account.accountIdentifier;
-            if (subscriptions.update(new Subscription(Long.valueOf(accountIdentifier), notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode, notification.payload.account.status))) {
+            if (subscriptions.update(new Subscription(Long.valueOf(accountIdentifier), notification.payload.company.name, notification.payload.order.editionCode, notification.payload.account.status))) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, "The account " + accountIdentifier + " could not be found."), HttpStatus.OK);

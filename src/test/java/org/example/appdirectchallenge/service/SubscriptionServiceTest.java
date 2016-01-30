@@ -34,11 +34,11 @@ public class SubscriptionServiceTest {
 
     @Test
     public void list() throws Exception {
-        when(subscriptions.list()).thenReturn(Collections.singletonList(new Subscription(1L, "", "", "", "")));
+        when(subscriptions.list()).thenReturn(Collections.singletonList(new Subscription(1L, "", "", "")));
 
         mvc.perform(MockMvcRequestBuilders.get("/api/subscriptions").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[{\"accountId\":1,\"creatorFirstName\":\"\",\"creatorLastName\":\"\",\"edition\":\"\",\"status\":\"\"}]")));
+                .andExpect(content().string(equalTo("[{\"id\":1,\"companyName\":\"\",\"edition\":\"\",\"status\":\"\"}]")));
     }
 
 }
