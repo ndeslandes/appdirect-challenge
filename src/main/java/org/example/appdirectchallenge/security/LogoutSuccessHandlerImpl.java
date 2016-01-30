@@ -16,9 +16,8 @@ public class LogoutSuccessHandlerImpl /*extends AbstractAuthenticationTargetUrlR
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         if (authentication.getPrincipal() != null && authentication.getPrincipal() instanceof User) {
             //TODO Retrieve the marketplace
-            String logoutUrl = "https://jacefoil.byappdirect.com/applogout?openid=%s";
             String openId = ((User) authentication.getPrincipal()).getUsername();
-            response.sendRedirect(String.format(logoutUrl, openId));
+            response.sendRedirect(String.format("https://www.appdirect.com/applogout?openid=%s", openId));
         }
     }
 }

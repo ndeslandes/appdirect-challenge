@@ -36,6 +36,8 @@ public class UserService {
 
         if (authentication != null) {
 
+            logger.info(authentication.toString());
+
             if (authentication instanceof OpenIDAuthenticationToken) {
                 OpenIDAuthenticationToken token = (OpenIDAuthenticationToken) authentication;
                 for(OpenIDAttribute attribute : token.getAttributes()) {
