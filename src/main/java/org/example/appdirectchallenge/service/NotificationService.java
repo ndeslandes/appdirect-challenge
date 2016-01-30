@@ -44,6 +44,8 @@ public class NotificationService {
             //    return new ResponseEntity<>(new ErrorResponse("ACCOUNT_ALREADY_EXISTS", ""), HttpStatus.CONFLICT);
             //}
 
+            log.info(notification.creator.openId);
+
             Account account = notification.payload.account;
             Long accountId = subscriptions.create(new Subscription(notification.creator.firstName, notification.creator.lastName, notification.payload.order.editionCode, account != null?account.status:null));
             return new ResponseEntity<>(new SuccessResponse(accountId.toString()), HttpStatus.OK);
