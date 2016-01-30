@@ -19,14 +19,15 @@
 
 <body>
 <div class="ui attached inverted blue menu">
-    <div class="ui container">
-        <a class="item" href="/">
-            <i class="user icon"></i> Subscription
+    <a class="active item" href="/">
+        Subscription
+    </a>
+
+    <div class="right menu">
+        <div class="ui item" id="currentUser"></div>
+        <a class="ui item" href="/logout">
+            Logout
         </a>
-        <a class="item" href="/logout">
-            <i class="user icon"></i> Logout
-        </a>
-        <div class="ui right floated" id="currentUser"></div>
     </div>
 </div>
 

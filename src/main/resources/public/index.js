@@ -16,6 +16,6 @@ type: 'GET',
 url: '/api/user/current',
 dataType: 'json',
 success: function(user){
-    $('#currentUser').html(user.email)
+    $('#currentUser').html(user.firstname + " " + user.lastname).attr('title', user.email)
 }
 });

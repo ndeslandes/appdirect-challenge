@@ -1,4 +1,4 @@
-package org.example.appdirectchallenge;
+package org.example.appdirectchallenge.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -14,8 +14,11 @@ public class LogoutSuccessHandlerImpl /*extends AbstractAuthenticationTargetUrlR
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        final String logoutUrl = "https://jacefoil.byappdirect.com/applogout?openid=%s";
-        final String openId = ((User) authentication.getPrincipal()).getUsername();
-        response.sendRedirect(String.format(logoutUrl, openId));
+        if (authentication.getPrincipal() != null && authentication.getPrincipal() instanceof User) {
+            //TODO Retrieve the marketplace
+            String logoutUrl = "https://jacefoil.byappdirect.com/applogout?openid=%s";
+            String openId = ((User) authentication.getPrincipal()).getUsername();
+            response.sendRedirect(String.format(logoutUrl, openId));
+        }
     }
 }

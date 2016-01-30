@@ -1,4 +1,4 @@
-package org.example.appdirectchallenge;
+package org.example.appdirectchallenge.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
