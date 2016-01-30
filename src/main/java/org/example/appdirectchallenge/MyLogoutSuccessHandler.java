@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class MyLogoutSuccessHandler extends AbstractAuthenticationTargetUrlRequestHandler implements LogoutSuccessHandler {
+public class MyLogoutSuccessHandler /*extends AbstractAuthenticationTargetUrlRequestHandler*/ implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        final String logoutUrl = "https://jacefoil-test.byappdirect.com/applogout?openid=%s";
+        final String logoutUrl = "https://jacefoil.byappdirect.com/applogout?openid=%s";
         final String openId = ((User) authentication.getPrincipal()).getUsername();
         response.sendRedirect(String.format(logoutUrl, openId));
     }

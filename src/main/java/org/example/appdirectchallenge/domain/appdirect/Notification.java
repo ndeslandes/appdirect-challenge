@@ -1,4 +1,4 @@
-package org.example.appdirectchallenge.domain;
+package org.example.appdirectchallenge.domain.appdirect;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,7 +11,7 @@ public class Notification {
     public MarketPlace marketplace;
     public String applicationUuid;
     public String flag;
-    public User creator;
+    public AppDirectUser creator;
     public Payload payload;
 
     @JsonCreator
@@ -19,7 +19,7 @@ public class Notification {
                         @JsonProperty("marketplace") MarketPlace marketplace,
                         @JsonProperty("applicationUuid") String applicationUuid,
                         @JsonProperty("flag") String flag,
-                        @JsonProperty("creator") User creator,
+                        @JsonProperty("creator") AppDirectUser creator,
                         @JsonProperty("payload") Payload payload) {
         this.type = type;
         this.marketplace = marketplace;

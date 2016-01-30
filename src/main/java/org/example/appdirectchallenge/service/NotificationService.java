@@ -3,6 +3,8 @@ package org.example.appdirectchallenge.service;
 
 import org.example.appdirectchallenge.domain.*;
 import org.example.appdirectchallenge.domain.ErrorResponse.ErrorCode;
+import org.example.appdirectchallenge.domain.appdirect.Account;
+import org.example.appdirectchallenge.domain.appdirect.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

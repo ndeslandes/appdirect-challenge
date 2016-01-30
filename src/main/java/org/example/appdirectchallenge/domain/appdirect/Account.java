@@ -1,4 +1,4 @@
-package org.example.appdirectchallenge.domain;
+package org.example.appdirectchallenge.domain.appdirect;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

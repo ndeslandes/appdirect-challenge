@@ -48,11 +48,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http
-                .logout()
+        http.logout()
                 .logoutUrl("/logout")
                 .logoutSuccessHandler(ajaxLogoutSuccessHandler);
 
+        // deactivate Cross-Site Request Forgery
         http.csrf().disable();
 
         http.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated()
@@ -101,7 +101,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         consumerDetailsService.setConsumerDetailsStore(new HashMap<String, ConsumerDetails>() {{
             put(consumerKey, consumerDetails);
         }});
-
         return consumerDetailsService;
     }
 
