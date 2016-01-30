@@ -1,80 +1,120 @@
 package org.example.appdirectchallenge;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth.common.signature.SharedConsumerSecretImpl;
 import org.springframework.security.oauth.consumer.BaseProtectedResourceDetails;
 import org.springframework.security.oauth.consumer.ProtectedResourceDetails;
-import org.springframework.security.oauth.provider.BaseConsumerDetails;
-import org.springframework.security.oauth.provider.ConsumerDetailsService;
-import org.springframework.security.oauth.provider.InMemoryConsumerDetailsService;
+import org.springframework.security.oauth.provider.*;
 import org.springframework.security.oauth.provider.filter.OAuthProviderProcessingFilter;
 import org.springframework.security.oauth.provider.filter.ProtectedResourceProcessingFilter;
 import org.springframework.security.oauth.provider.token.InMemoryProviderTokenServices;
-import org.springframework.security.oauth.provider.token.OAuthProviderTokenServices;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.openid.OpenIDAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.util.Collections;
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private MyLogoutSuccessHandler ajaxLogoutSuccessHandler;
+
+    @Autowired
+    private MyUserDetailsService userDetailsService;
 
     @Value("${oauth.consumer.key}")
     private String consumerKey;
+
     @Value("${oauth.consumer.secret}")
     private String consumerSecret;
 
     @Override
+    public void configure(final WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/*.{js,html}", "/webjars/**");
+    }
+
+    @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.antMatcher("/api/notification/**").authorizeRequests().anyRequest().authenticated().and()
-                .addFilterAfter(buildOAuthProviderProcessingFilter(), LogoutFilter.class);
+        http
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(ajaxLogoutSuccessHandler);
+
+        http.csrf().disable();
+
+        http.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated()
+                .and()
+                .openidLogin()
+                .authenticationUserDetailsService(userDetailsService)
+                .loginProcessingUrl("/login/openid")
+                .permitAll()
+                .defaultSuccessUrl("/");
+
+        http.addFilterBefore(oAuthProviderProcessingFilter(), OpenIDAuthenticationFilter.class);
     }
 
     @Bean
-    public FilterRegistrationBean disableOAuthFilterForAllRequests(final OAuthProviderProcessingFilter filter) {
-        FilterRegistrationBean registration = new FilterRegistrationBean(filter);
-        registration.setEnabled(false);
-        return registration;
-    }
+    public OAuthProviderProcessingFilter oAuthProviderProcessingFilter() {
 
-    @Bean
-    public OAuthProviderProcessingFilter buildOAuthProviderProcessingFilter() {
-        ProtectedResourceProcessingFilter filter = new ProtectedResourceProcessingFilter();
-        filter.setIgnoreMissingCredentials(false);
+        final ProtectedResourceProcessingFilter filter = new ProtectedResourceProcessingFilter() {
+
+            @Override
+            protected boolean requiresAuthentication(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) {
+
+                if (new AntPathRequestMatcher("/api/notification/**").matches(request)) {
+                    OAuthProcessingFilterEntryPoint authenticationEntryPoint = new OAuthProcessingFilterEntryPoint();
+                    setAuthenticationEntryPoint(authenticationEntryPoint);
+                    String realmName = request.getRequestURL().toString();
+                    authenticationEntryPoint.setRealmName(realmName);
+                    return true;
+                }
+                return false;
+            }
+        };
+        filter.setConsumerDetailsService(consumerDetailsService());
+        filter.setTokenServices(inMemoryProviderTokenServices());
+
         return filter;
     }
 
     @Bean
-    public ConsumerDetailsService buildConsumerDetailsService() {
-        BaseConsumerDetails consumerDetails = new BaseConsumerDetails();
+    public ConsumerDetailsService consumerDetailsService() {
+        final BaseConsumerDetails consumerDetails = new BaseConsumerDetails();
         consumerDetails.setConsumerKey(consumerKey);
         consumerDetails.setSignatureSecret(new SharedConsumerSecretImpl(consumerSecret));
         consumerDetails.setRequiredToObtainAuthenticatedToken(false);
-        consumerDetails.getAuthorities().add(new SimpleGrantedAuthority("APPDIRECT"));
 
-        InMemoryConsumerDetailsService service = new InMemoryConsumerDetailsService();
-        service.setConsumerDetailsStore(Collections.singletonMap(consumerKey, consumerDetails));
-        return service;
+        final InMemoryConsumerDetailsService consumerDetailsService = new InMemoryConsumerDetailsService();
+        consumerDetailsService.setConsumerDetailsStore(new HashMap<String, ConsumerDetails>() {{
+            put(consumerKey, consumerDetails);
+        }});
+
+        return consumerDetailsService;
     }
 
     @Bean
-    public OAuthProviderTokenServices buildOAuthProviderTokenServices() {
+    public InMemoryProviderTokenServices inMemoryProviderTokenServices() {
         return new InMemoryProviderTokenServices();
     }
 
     @Bean
-    public ProtectedResourceDetails buildProtectedResourceDetails() {
+    public ProtectedResourceDetails protectedResourceDetails() {
         BaseProtectedResourceDetails resource = new BaseProtectedResourceDetails();
         resource.setConsumerKey(consumerKey);
         resource.setSharedSecret(new SharedConsumerSecretImpl(consumerSecret));
         return resource;
     }
-
 }
