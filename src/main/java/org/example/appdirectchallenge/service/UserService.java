@@ -10,12 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.openid.OpenIDAttribute;
-import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api")
@@ -32,27 +28,12 @@ public class UserService {
 
     @RequestMapping("/user/current")
     public ResponseEntity<User> currentUser() {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null) {
-
-            logger.info(authentication.toString());
-
-            if (authentication instanceof OpenIDAuthenticationToken) {
-                OpenIDAuthenticationToken token = (OpenIDAuthenticationToken) authentication;
-                for(OpenIDAttribute attribute : token.getAttributes()) {
-                    logger.info(attribute.getName() + " -> [" + attribute.getValues().stream().collect(Collectors.joining(", ")) + "]");
-                }
-            }
-
-            if (authentication.getPrincipal() instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-                User user = userRepository.readByOpenid(userDetails.getUsername());
-                return new ResponseEntity<>(user, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User user = userRepository.readByOpenid(userDetails.getUsername());
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
