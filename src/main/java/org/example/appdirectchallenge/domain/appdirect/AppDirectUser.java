@@ -17,12 +17,12 @@ public class AppDirectUser {
 
     @JsonCreator
     public AppDirectUser(@JsonProperty("uuid") String uuid,
-                @JsonProperty("openId") String openId,
-                @JsonProperty("email") String email,
-                @JsonProperty("firstName") String firstName,
-                @JsonProperty("lastName") String lastName,
-                @JsonProperty("language") String language,
-                @JsonProperty("address") Address address) {
+                         @JsonProperty("openId") String openId,
+                         @JsonProperty("email") String email,
+                         @JsonProperty("firstName") String firstName,
+                         @JsonProperty("lastName") String lastName,
+                         @JsonProperty("language") String language,
+                         @JsonProperty("address") Address address) {
         this.uuid = uuid;
         this.email = email;
         this.firstName = firstName;

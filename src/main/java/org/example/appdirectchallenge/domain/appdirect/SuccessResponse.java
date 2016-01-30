@@ -7,8 +7,9 @@ public class SuccessResponse extends Response {
     public SuccessResponse() {
         this.success = "true";
     }
+
     public SuccessResponse(String accountIdentifier) {
-        this.success = "true";
+        this();
         this.accountIdentifier = accountIdentifier;
     }
 }

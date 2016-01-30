@@ -6,6 +6,8 @@ import org.example.appdirectchallenge.domain.User;
 import org.example.appdirectchallenge.domain.UserRepository;
 import org.example.appdirectchallenge.domain.appdirect.*;
 import org.example.appdirectchallenge.domain.appdirect.ErrorResponse.ErrorCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/notification/subscription")
 public class NotificationService {
+
+    private Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
     private SubscriptionRepository subscriptionRepository;
 
@@ -56,7 +60,8 @@ public class NotificationService {
 
             return new ResponseEntity<>(new SuccessResponse(subscriptionId.toString()), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNKNOWN_ERROR, ""), HttpStatus.OK);
+            logger.error(String.format("Exception thrown %s", e.getMessage()), e);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNKNOWN_ERROR, e.getMessage()), HttpStatus.OK);
         }
     }
 
@@ -80,6 +85,7 @@ public class NotificationService {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, String.format("The account %s could not be found.", account.accountIdentifier)), HttpStatus.OK);
             }
         } catch (Exception e) {
+            logger.error(String.format("Exception thrown %s", e.getMessage()), e);
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNKNOWN_ERROR, e.getMessage()), HttpStatus.OK);
         }
     }
@@ -102,6 +108,7 @@ public class NotificationService {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, "The account " + accountIdentifier + " could not be found."), HttpStatus.OK);
             }
         } catch (Exception e) {
+            logger.error(String.format("Exception thrown %s", e.getMessage()), e);
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.UNKNOWN_ERROR, e.getMessage()), HttpStatus.OK);
         }
     }

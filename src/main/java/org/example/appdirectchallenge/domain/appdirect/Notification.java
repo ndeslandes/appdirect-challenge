@@ -10,7 +10,7 @@ public class Notification {
     public Type type;
     public MarketPlace marketplace;
     public String applicationUuid;
-    public String flag;
+    public Flag flag;
     public AppDirectUser creator;
     public Payload payload;
 
@@ -18,7 +18,7 @@ public class Notification {
     public Notification(@JsonProperty("type") Type type,
                         @JsonProperty("marketplace") MarketPlace marketplace,
                         @JsonProperty("applicationUuid") String applicationUuid,
-                        @JsonProperty("flag") String flag,
+                        @JsonProperty("flag") Flag flag,
                         @JsonProperty("creator") AppDirectUser creator,
                         @JsonProperty("payload") Payload payload) {
         this.type = type;
@@ -30,7 +30,18 @@ public class Notification {
     }
 
     public enum Type {
-        SUBSCRIPTION_ORDER, SUBSCRIPTION_CHANGE, SUBSCRIPTION_CANCEL, SUBSCRIPTION_NOTICE, USER_ASSIGNMENT, USER_UNASSIGNMENT, USER_UPDATED
+        SUBSCRIPTION_ORDER,
+        SUBSCRIPTION_CHANGE,
+        SUBSCRIPTION_CANCEL,
+        SUBSCRIPTION_NOTICE,
+        USER_ASSIGNMENT,
+        USER_UNASSIGNMENT,
+        USER_UPDATED
+    }
+
+    public enum Flag {
+        STATELESS,
+        DEVELOPMENT
     }
 
 }
