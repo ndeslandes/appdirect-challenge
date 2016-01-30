@@ -17,7 +17,7 @@ $.ajax({
     dataType: 'json',
     success: function(user){
         $('#currentUser').html(user.firstname + " " + user.lastname).attr('title', user.email);
-        $('#logoutButton').removeClass("hidden");
+        $('#logoutButton').removeClass("disabled").attr('href', '/logout');
     },
     error: function (xhr, ajaxOptions, thrownError) {
         $('#currentUser').html("Anonymous");
