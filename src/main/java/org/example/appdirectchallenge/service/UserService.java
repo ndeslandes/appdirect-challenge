@@ -2,6 +2,7 @@ package org.example.appdirectchallenge.service;
 
 import org.example.appdirectchallenge.MyUserDetailsService;
 import org.example.appdirectchallenge.domain.User;
+import org.example.appdirectchallenge.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ public class UserService {
 
     @Autowired
     private MyUserDetailsService userDetailsService;
+
+    @Autowired
+    private UserRepository users;
 
     @RequestMapping("/authenticate")
     public String isAuthenticated(HttpServletRequest request) {

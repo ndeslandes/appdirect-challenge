@@ -6,7 +6,7 @@ success: function(response){
     var name = response;
     var yourTableHTML = '';
     jQuery.each(name, function(i,data) {
-        $('#subscriptionTable').append('<tr><td>' + data.accountId + '</td><td>' + data.creatorFirstName + '</td><td>' + data.creatorLastName + '</td><td>' + data.edition + '</td><td>' + data.status + '</td></tr>');
+        $('#subscriptionTable').append('<tr><td>' + data.id + '</td><td>' + data.companyName + '</td><td>' + data.edition + '</td><td>' + data.status + '</td></tr>');
     });
 }
 });
