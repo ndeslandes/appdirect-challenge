@@ -44,10 +44,7 @@ public class UserService {
                     logger.info(attribute.getName() + " -> [" + attribute.getValues().stream().collect(Collectors.joining(", ")) + "]");
                 }
             }
-
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-            User user = userRepository.readByOpenid(userDetails.getUsername());
+            User user = userRepository.readByOpenid((String) authentication.getPrincipal());
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
