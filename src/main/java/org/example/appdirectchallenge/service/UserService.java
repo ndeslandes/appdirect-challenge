@@ -45,7 +45,7 @@ public class UserService {
                 }
             }
 
-            if (authentication instanceof UserDetails) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
                 User user = userRepository.readByOpenid(userDetails.getUsername());
