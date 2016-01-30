@@ -54,6 +54,6 @@ public class UserRepository {
             rs.getString("firstname"),
             rs.getString("lastname"),
             rs.getString("email"),
-            rs.getLong("account_id"));
+            rs.getLong("subscription_id"));
 
 }
