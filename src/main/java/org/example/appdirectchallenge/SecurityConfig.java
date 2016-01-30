@@ -30,10 +30,10 @@ import java.util.HashMap;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private MyLogoutSuccessHandler ajaxLogoutSuccessHandler;
+    private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     @Autowired
-    private MyUserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Value("${oauth.consumer.key}")
     private String consumerKey;
@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.logout()
                 .logoutUrl("/logout")
-                .logoutSuccessHandler(ajaxLogoutSuccessHandler);
+                .logoutSuccessHandler(logoutSuccessHandler);
 
         // deactivate Cross-Site Request Forgery
         http.csrf().disable();

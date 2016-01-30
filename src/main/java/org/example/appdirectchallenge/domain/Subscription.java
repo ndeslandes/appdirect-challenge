@@ -14,10 +14,8 @@ public class Subscription {
     }
 
     public Subscription(Long id, String companyName, String edition, String status) {
+        this(companyName, edition, status);
         this.id = id;
-        this.companyName = companyName;
-        this.edition = edition;
-        this.status = status;
     }
 
 }

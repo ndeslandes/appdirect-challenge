@@ -1,4 +1,4 @@
-package org.example.appdirectchallenge.domain;
+package org.example.appdirectchallenge.domain.appdirect;
 
 public class ErrorResponse extends Response {
 

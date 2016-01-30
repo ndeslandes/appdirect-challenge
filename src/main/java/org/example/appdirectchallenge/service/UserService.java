@@ -1,6 +1,5 @@
 package org.example.appdirectchallenge.service;
 
-import org.example.appdirectchallenge.MyUserDetailsService;
 import org.example.appdirectchallenge.domain.User;
 import org.example.appdirectchallenge.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,14 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("api")
 public class UserService {
 
-    @Autowired
-    private MyUserDetailsService userDetailsService;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository users;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    @RequestMapping("/authenticate")
+    @RequestMapping("/user/authenticate")
     public String isAuthenticated(HttpServletRequest request) {
         return request.getRemoteUser();
     }
@@ -34,7 +34,9 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return new ResponseEntity<>(new User(userDetails.getUsername()), HttpStatus.OK);
+
+            User user = userRepository.readByOpenid(userDetails.getUsername());
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

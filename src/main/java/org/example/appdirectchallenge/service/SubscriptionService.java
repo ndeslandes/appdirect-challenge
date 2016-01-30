@@ -12,15 +12,15 @@ import java.util.List;
 @RequestMapping("api")
 public class SubscriptionService {
 
-    private SubscriptionRepository subscriptions;
+    private SubscriptionRepository subscriptionRepository;
 
     @Autowired
-    public SubscriptionService(SubscriptionRepository subscriptions) {
-        this.subscriptions = subscriptions;
+    public SubscriptionService(SubscriptionRepository subscriptionRepository) {
+        this.subscriptionRepository = subscriptionRepository;
     }
 
     @RequestMapping("subscriptions")
     public List<Subscription> list() {
-        return subscriptions.list();
+        return subscriptionRepository.list();
     }
 }

@@ -9,10 +9,6 @@ public class User {
     public String email;
     public Long subscriptionId;
 
-    public User(String email) {
-        this.email = email;
-    }
-
     public User(String openId, String firstname, String lastname, String email, Long subscriptionId) {
         this.firstname = firstname;
         this.lastname = lastname;
@@ -22,11 +18,7 @@ public class User {
     }
 
     public User(Long id, String openId, String firstname, String lastname, String email, Long subscriptionId) {
+        this(openId, firstname, lastname, email, subscriptionId);
         this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.openId = openId;
-        this.email = email;
-        this.subscriptionId = subscriptionId;
     }
 }
