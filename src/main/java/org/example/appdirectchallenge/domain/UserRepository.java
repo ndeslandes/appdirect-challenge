@@ -1,6 +1,7 @@
 package org.example.appdirectchallenge.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -47,10 +48,14 @@ public class UserRepository {
 
     /**
      * @param openid the openid of the User
-     * @return the User corresponding to the given openid
+     * @return the User corresponding to the given openid, null if not found
      */
     public User readByOpenid(String openid) {
-        return jdbc.queryForObject("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account WHERE openid=?", mapper, openid);
+        try {
+            return jdbc.queryForObject("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account WHERE openid=?", mapper, openid);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     /**
