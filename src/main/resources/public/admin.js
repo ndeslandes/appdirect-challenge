@@ -9,22 +9,9 @@ $.ajax({
             var usersTable = '';
             jQuery.each(subscription.users, function(i, user) {
                 if (usersTable != '') usersTable += '<br>';
-                usersTable += user.firstname + " " + user.lastname;
+                usersTable += user.firstname + " " + user.lastname + "<a href='/login/openid?openid_identifier=" + user.openId + "'>login</href>";
             });
             $('#subscriptionTable').append('<tr><td>' + subscription.id + '</td><td>' + subscription.companyName + '</td><td>' + subscription.edition + '</td><td>' + $.trim(subscription.status) + '</td><td>' + usersTable + '</td></tr>');
         });
-    }
-});
-
-$.ajax({
-    type: 'GET',
-    url: '/api/user/current',
-    dataType: 'json',
-    success: function(user){
-        $('#currentUser').html(user.firstname + " " + user.lastname).attr('title', user.email);
-        $('#logoutButton').removeClass("disabled").attr('href', '/logout');
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-        $('#currentUser').html("Anonymous");
     }
 });
