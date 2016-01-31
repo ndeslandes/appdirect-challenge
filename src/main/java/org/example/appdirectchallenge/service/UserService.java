@@ -34,6 +34,7 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication instanceof OpenIDAuthenticationToken && authentication.getPrincipal() instanceof UserDetails) {
             OpenIDAuthenticationToken openIDAuthenticationToken = (OpenIDAuthenticationToken) authentication;
+            logger.info(openIDAuthenticationToken.getAttributes().toString());
             logger.info(openIDAuthenticationToken.getAttributes().stream().map(o -> o.getName() + " -> [" + o.getValues().stream().collect(Collectors.joining(", ")) + "]").collect(Collectors.joining(", ")));
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             User user = userRepository.readByOpenid(userDetails.getUsername());
