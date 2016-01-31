@@ -19,10 +19,10 @@
 
 <body>
 <div class="ui attached inverted blue menu">
-    <a class="item active" href="/index.html">
+    <a class="item" href="/index.html">
         Home
     </a>
-    <a class="item" href="/admin.html">
+    <a class="item active" href="/admin.html">
         Admin
     </a>
 
@@ -37,11 +37,26 @@
 <div class="ui hidden divider"></div>
 
 <div class="ui container">
-Welcome!
+<div class="ui top attached tabular menu">
+    <div class="item active" data-tab="subscription">Subscription</div>
+</div>
+<div class="ui bottom attached tab segment active" data-tab="subscription">
+    <table class="ui striped celled table" id="subscriptionTable">
+        <thead><tr>
+            <th>#</th>
+            <th>Company</th>
+            <th>Edition</th>
+            <th>Status</th>
+            <th>Users</th>
+        </tr></thead>
+        <tbody></tbody>
+    </table>
+</div>
 </div>
 
 <script src="/webjars/jquery/1.11.3/jquery.min.js"></script>
 <script src="/webjars/Semantic-UI/2.1.8/semantic.min.js"></script>
 <script src="/common.js"></script>
+<script src="/admin.js"></script>
 </body>
 </html>

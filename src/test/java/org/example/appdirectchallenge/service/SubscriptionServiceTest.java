@@ -2,43 +2,45 @@ package org.example.appdirectchallenge.service;
 
 import org.example.appdirectchallenge.domain.Subscription;
 import org.example.appdirectchallenge.domain.SubscriptionRepository;
+import org.example.appdirectchallenge.domain.User;
+import org.example.appdirectchallenge.domain.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SubscriptionServiceTest {
 
-    private MockMvc mvc;
+    private SubscriptionService subscriptionService;
 
     @Mock
-    private SubscriptionRepository subscriptions;
+    private SubscriptionRepository subscriptionRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Before
-    public void setUp() throws Exception {
-        mvc = MockMvcBuilders.standaloneSetup(new SubscriptionService(subscriptions)).build();
+    public void setUp() {
+        subscriptionService = new SubscriptionService(subscriptionRepository, userRepository);
     }
 
     @Test
-    public void list() throws Exception {
-        when(subscriptions.list()).thenReturn(Collections.singletonList(new Subscription(1L, "", "", "")));
+    public void subscriptionService_list_withOneSubscriptionAndOneUser_returnOneSubscription() {
+        User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", 1L);
+        Subscription subscription = new Subscription(1L, "S.H.I.E.L.D.", "FREE", "ACTIVE", Collections.singletonList(user));
 
-        mvc.perform(MockMvcRequestBuilders.get("/api/subscriptions").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[{\"id\":1,\"companyName\":\"\",\"edition\":\"\",\"status\":\"\"}]")));
+        when(subscriptionRepository.list()).thenReturn(Collections.singletonList(subscription));
+        when(userRepository.list(1L)).thenReturn(Collections.singletonList(user));
+
+        assertThat(subscriptionService.list(), contains(subscription));
     }
 
 }

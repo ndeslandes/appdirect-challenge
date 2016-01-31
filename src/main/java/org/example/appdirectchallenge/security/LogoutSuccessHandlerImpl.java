@@ -10,12 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class LogoutSuccessHandlerImpl /*extends AbstractAuthenticationTargetUrlRequestHandler*/ implements LogoutSuccessHandler {
+public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         if (authentication.getPrincipal() != null && authentication.getPrincipal() instanceof User) {
-            //TODO Retrieve the marketplace
             String openId = ((User) authentication.getPrincipal()).getUsername();
             response.sendRedirect(String.format("https://www.appdirect.com/applogout?openid=%s", openId));
         }

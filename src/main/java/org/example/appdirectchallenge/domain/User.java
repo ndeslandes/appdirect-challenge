@@ -9,7 +9,8 @@ public class User {
     public String email;
     public Long subscriptionId;
 
-    public User(String openId, String firstname, String lastname, String email, Long subscriptionId) {
+    public User(Long id, String openId, String firstname, String lastname, String email, Long subscriptionId) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.openId = openId;
@@ -17,8 +18,7 @@ public class User {
         this.subscriptionId = subscriptionId;
     }
 
-    public User(Long id, String openId, String firstname, String lastname, String email, Long subscriptionId) {
-        this(openId, firstname, lastname, email, subscriptionId);
-        this.id = id;
+    public User(String openId, String firstname, String lastname, String email, Long subscriptionId) {
+        this(null, openId, firstname, lastname, email, subscriptionId);
     }
 }

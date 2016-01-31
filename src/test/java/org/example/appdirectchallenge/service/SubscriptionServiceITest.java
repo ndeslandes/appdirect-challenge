@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -32,15 +33,15 @@ public class SubscriptionServiceITest {
     private RestTemplate template;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws MalformedURLException {
         this.base = new URL("http://localhost:" + port);
         template = new TestRestTemplate();
     }
 
     @Test
-    public void list() throws Exception {
+    public void list() {
         ResponseEntity<String> response = template.getForEntity(base + "/api/subscriptions", String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(response.getBody(), equalTo("[{\"id\":1,\"companyName\":\"Jacefoil inc\",\"edition\":\"FREE\",\"status\":\"INITIALIZED\"}]"));
+        assertThat(response.getBody(), equalTo("[{\"id\":1,\"companyName\":\"Jacefoil inc\",\"edition\":\"FREE\",\"status\":\"INITIALIZED\",\"users\":[{\"id\":1,\"openId\":\"open_ID\",\"firstname\":\"Nicolas\",\"lastname\":\"Deslandes\",\"email\":\"deslandes.nicolas@gmail.com\",\"subscriptionId\":1}]}]"));
     }
 }

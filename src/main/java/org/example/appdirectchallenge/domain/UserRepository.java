@@ -29,6 +29,14 @@ public class UserRepository {
     }
 
     /**
+     * @param subscriptionId the subscriptionId of the User
+     * @return all the User in the database
+     */
+    public List<User> list(Long subscriptionId) {
+        return jdbc.query("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account WHERE subscription_id = ?", mapper, subscriptionId);
+    }
+
+    /**
      * @param user the User to insert in the database
      * @return the auto-generated id of the new User
      */
