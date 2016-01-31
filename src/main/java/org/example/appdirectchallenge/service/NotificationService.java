@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("api/notification/subscription")
 public class NotificationService {
@@ -48,15 +50,15 @@ public class NotificationService {
             }
 
             AppDirectUser creator = notification.creator;
-            Account account = notification.payload.account;
+            Optional<Account> account = notification.payload.account;
             Company company = notification.payload.company;
             Order order = notification.payload.order;
 
-            if(userRepository.readByOpenid(creator.openId) != null) {
+            if(userRepository.readByEmail(creator.email).isPresent()) {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.USER_ALREADY_EXISTS, ""), HttpStatus.CONFLICT);
             }
 
-            Long subscriptionId = subscriptionRepository.create(new Subscription(company.name, order.editionCode, account!=null?account.status:null));
+            Long subscriptionId = subscriptionRepository.create(new Subscription(company.name, order.editionCode, account.map(a -> a.status).orElse(null)));
             userRepository.create(new User(creator.openId, creator.firstName, creator.lastName, creator.email, subscriptionId));
 
             return new ResponseEntity<>(new SuccessResponse(subscriptionId.toString()), HttpStatus.OK);
@@ -77,7 +79,7 @@ public class NotificationService {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             }
 
-            Account account = notification.payload.account;
+            Account account = notification.payload.account.get();
             Company company = notification.payload.company;
             Order order = notification.payload.order;
 
@@ -103,7 +105,7 @@ public class NotificationService {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             }
 
-            Long accountIdentifier = Long.valueOf(notification.payload.account.accountIdentifier);
+            Long accountIdentifier = Long.valueOf(notification.payload.account.get().accountIdentifier);
             userRepository.deleteBySubscriptionId(accountIdentifier);
             if (subscriptionRepository.delete(accountIdentifier)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);

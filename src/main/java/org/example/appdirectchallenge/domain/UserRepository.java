@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepository {
@@ -55,14 +56,14 @@ public class UserRepository {
     }
 
     /**
-     * @param openid the openid of the User
-     * @return the User corresponding to the given openid, null if not found
+     * @param email the email of the User
+     * @return the Optional User corresponding to the given email
      */
-    public User readByOpenid(String openid) {
+    public Optional<User> readByEmail(String email) {
         try {
-            return jdbc.queryForObject("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account WHERE openid=?", mapper, openid);
+            return Optional.of(jdbc.queryForObject("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account WHERE email=?", mapper, email));
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            return Optional.empty();
         }
     }
 

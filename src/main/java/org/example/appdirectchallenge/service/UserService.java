@@ -14,13 +14,11 @@ import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api")
 public class UserService {
-
-    Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private UserRepository userRepository;
 
@@ -34,11 +32,13 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication instanceof OpenIDAuthenticationToken && authentication.getPrincipal() instanceof UserDetails) {
             OpenIDAuthenticationToken openIDAuthenticationToken = (OpenIDAuthenticationToken) authentication;
-            logger.info(openIDAuthenticationToken.getAttributes().toString());
-            logger.info(openIDAuthenticationToken.getAttributes().stream().map(o -> o.getName() + " -> [" + o.getValues().stream().collect(Collectors.joining(", ")) + "]").collect(Collectors.joining(", ")));
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User user = userRepository.readByOpenid(userDetails.getUsername());
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            String email = openIDAuthenticationToken.getAttributes().stream().filter( a -> a.getName().equals("email")).findFirst().get().getValues().get(0);
+            Optional<User> user = userRepository.readByEmail(email);
+            if(user.isPresent()) {
+                return new ResponseEntity<>(user.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

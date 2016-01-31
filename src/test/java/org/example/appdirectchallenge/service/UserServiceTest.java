@@ -11,7 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.openid.OpenIDAttribute;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
@@ -41,12 +47,12 @@ public class UserServiceTest {
     public void userService_currentUser_withecurityContext_returnUserAndHttpOk() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         org.springframework.security.core.userdetails.User openID = new org.springframework.security.core.userdetails.User("openID", "", emptyList());
-        securityContext.setAuthentication(new OpenIDAuthenticationToken(openID, emptyList(), "", emptyList()));
+        List<OpenIDAttribute> attributes = Collections.singletonList(new OpenIDAttribute("email", "", Collections.singletonList("tony.stark@starkindustries.com")));
+        securityContext.setAuthentication(new OpenIDAuthenticationToken(openID, emptyList(), "", attributes));
         SecurityContextHolder.setContext(securityContext);
 
         User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", 1L);
-        when(userRepository.readByOpenid("openID")).thenReturn(user);
+        when(userRepository.readByEmail("tony.stark@starkindustries.com")).thenReturn(Optional.of(user));
         assertThat(userService.currentUser(), is(new ResponseEntity<>(user, HttpStatus.OK)));
     }
-
 }
