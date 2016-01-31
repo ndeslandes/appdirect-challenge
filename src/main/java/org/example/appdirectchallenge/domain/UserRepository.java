@@ -56,12 +56,12 @@ public class UserRepository {
     }
 
     /**
-     * @param email the email of the User
-     * @return the Optional User corresponding to the given email
+     * @param openid the openid of the User
+     * @return the Optional User corresponding to the given openid
      */
-    public Optional<User> readByEmail(String email) {
+    public Optional<User> readByOpenid(String openid) {
         try {
-            return Optional.of(jdbc.queryForObject("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account WHERE email=?", mapper, email));
+            return Optional.of(jdbc.queryForObject("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account WHERE openid=?", mapper, openid));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

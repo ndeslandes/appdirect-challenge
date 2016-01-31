@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.openid.OpenIDLoginConfigurer;
 import org.springframework.security.oauth.common.signature.SharedConsumerSecretImpl;
 import org.springframework.security.oauth.consumer.BaseProtectedResourceDetails;
 import org.springframework.security.oauth.consumer.ProtectedResourceDetails;
@@ -56,18 +55,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // deactivate Cross-Site Request Forgery
         http.csrf().disable();
 
-        http.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated()
-                .and()
-                .openidLogin()
-                .authenticationUserDetailsService(userDetailsService)
-                .loginProcessingUrl("/login/openid")
-                .permitAll()
-                .defaultSuccessUrl("/");
+        http.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated();
 
-        http.openidLogin().attributeExchange("https://www.appdirect.com/.*")
+        /*
+        http.openidLogin()
+                .attributeExchange("https://www.appdirect.com/.*")
                 .attribute("email").type("http://axschema.org/contact/email").required(true)
                 .and().attribute("firstname").type("http://axschema.org/namePerson/first").required(true)
                 .and().attribute("lastname").type("http://axschema.org/namePerson/last").required(true);
+        */
+
+        http.openidLogin()
+            .authenticationUserDetailsService(userDetailsService)
+            .loginProcessingUrl("/login/openid")
+            .permitAll()
+            .defaultSuccessUrl("/");
 
         http.addFilterBefore(oAuthProviderProcessingFilter(), OpenIDAuthenticationFilter.class);
     }

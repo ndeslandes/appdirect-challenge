@@ -21,4 +21,8 @@ public class User {
     public User(String openId, String firstname, String lastname, String email, Long subscriptionId) {
         this(null, openId, firstname, lastname, email, subscriptionId);
     }
+
+    public static String extractOpenId(String openIdUrl) {
+        return openIdUrl.replaceFirst(".*/([^/?]+).*", "$1");
+    }
 }

@@ -54,12 +54,12 @@ public class NotificationService {
             Company company = notification.payload.company;
             Order order = notification.payload.order;
 
-            if(userRepository.readByEmail(creator.email).isPresent()) {
+            if(userRepository.readByOpenid(creator.openId).isPresent()) {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.USER_ALREADY_EXISTS, ""), HttpStatus.CONFLICT);
             }
 
             Long subscriptionId = subscriptionRepository.create(new Subscription(company.name, order.editionCode, account.map(a -> a.status).orElse(null)));
-            userRepository.create(new User(creator.openId, creator.firstName, creator.lastName, creator.email, subscriptionId));
+            userRepository.create(new User(User.extractOpenId(creator.openId), creator.firstName, creator.lastName, creator.email, subscriptionId));
 
             return new ResponseEntity<>(new SuccessResponse(subscriptionId.toString()), HttpStatus.OK);
         } catch (Exception e) {
