@@ -10,10 +10,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
 
-import java.util.Collections;
-
+import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -26,23 +26,25 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private SecurityContext securityContext;
-
     @Before
     public void setUp() {
-        userService = new UserService(userRepository, securityContext);
+        userService = new UserService(userRepository);
     }
 
     @Test
     public void userService_currentUser_withoutSecurityContext_returnNothingAndHttpNotFound() {
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
         assertThat(userService.currentUser(), is(new ResponseEntity<>(HttpStatus.NOT_FOUND)));
     }
 
     @Test
     public void userService_currentUser_withecurityContext_returnUserAndHttpOk() {
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        org.springframework.security.core.userdetails.User openID = new org.springframework.security.core.userdetails.User("openID", "", emptyList());
+        securityContext.setAuthentication(new OpenIDAuthenticationToken(openID, emptyList(), "", emptyList()));
+        SecurityContextHolder.setContext(securityContext);
+
         User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", 1L);
-        when(securityContext.getAuthentication()).thenReturn(new OpenIDAuthenticationToken(new org.springframework.security.core.userdetails.User("openID", "", Collections.emptyList()), null, null, Collections.emptyList()));
         when(userRepository.readByOpenid("openID")).thenReturn(user);
         assertThat(userService.currentUser(), is(new ResponseEntity<>(user, HttpStatus.OK)));
     }
