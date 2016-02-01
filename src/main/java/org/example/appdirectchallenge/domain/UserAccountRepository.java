@@ -9,7 +9,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +37,7 @@ public class UserAccountRepository {
     public Long create(UserAccount user) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(c -> {
-            PreparedStatement ps = c.prepareStatement("INSERT INTO user_account(openid, firstname, lastname, email, subscription_id) VALUES (?, ?, ?, ?, ?)",  new int[] {1});
+            PreparedStatement ps = c.prepareStatement("INSERT INTO user_account(openid, firstname, lastname, email, subscription_id) VALUES (?, ?, ?, ?, ?)",  new String[]{"id"});
             ps.setString(1, user.openId);
             ps.setString(2, user.firstname);
             ps.setString(3, user.lastname);
