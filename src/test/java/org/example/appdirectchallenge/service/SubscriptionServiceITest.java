@@ -42,6 +42,6 @@ public class SubscriptionServiceITest {
     public void list() {
         ResponseEntity<String> response = template.getForEntity(base + "/api/subscriptions", String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(response.getBody(), equalTo( "[{\"id\":1,\"companyName\":\"Jacefoil inc\",\"edition\":\"FREE\",\"status\":\"INITIALIZED\",\"marketPlaceBaseUrl\":\"https://example.org/\",\"users\":[{\"id\":1,\"openId\":\"openID\",\"firstname\":\"Nicolas\",\"lastname\":\"Deslandes\",\"email\":\"deslandes.nicolas@gmail.com\",\"subscriptionId\":1}]}]"));
+        assertThat(response.getBody(), equalTo("[{\"id\":1,\"companyName\":\"Jacefoil inc\",\"edition\":\"FREE\",\"status\":\"INITIALIZED\",\"marketPlaceBaseUrl\":\"https://example.org/\",\"users\":[{\"id\":1,\"openId\":\"openID\",\"firstname\":\"Nicolas\",\"lastname\":\"Deslandes\",\"email\":\"deslandes.nicolas@gmail.com\",\"subscription\":{\"id\":1,\"companyName\":null,\"edition\":null,\"status\":null,\"marketPlaceBaseUrl\":null,\"users\":null}}]}]"));
     }
 }

@@ -7,19 +7,19 @@ public class User {
     public String firstname;
     public String lastname;
     public String email;
-    public Long subscriptionId;
+    public Subscription subscription;
 
-    public User(Long id, String openId, String firstname, String lastname, String email, Long subscriptionId) {
+    public User(Long id, String openId, String firstname, String lastname, String email, Subscription subscription) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.openId = openId;
         this.email = email;
-        this.subscriptionId = subscriptionId;
+        this.subscription = subscription;
     }
 
-    public User(String openId, String firstname, String lastname, String email, Long subscriptionId) {
-        this(null, openId, firstname, lastname, email, subscriptionId);
+    public User(String openId, String firstname, String lastname, String email, Subscription subscription) {
+        this(null, openId, firstname, lastname, email, subscription);
     }
 
     public static String extractOpenId(String openIdUrl) {

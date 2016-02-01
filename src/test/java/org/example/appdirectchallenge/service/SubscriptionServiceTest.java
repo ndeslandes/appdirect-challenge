@@ -34,7 +34,7 @@ public class SubscriptionServiceTest {
 
     @Test
     public void subscriptionService_list_withOneSubscriptionAndOneUser_returnOneSubscription() {
-        User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", 1L);
+        User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", new Subscription(1L));
         Subscription subscription = new Subscription(1L, "S.H.I.E.L.D.", "FREE", "ACTIVE", "https://example.org/", Collections.singletonList(user));
 
         when(subscriptionRepository.list()).thenReturn(Collections.singletonList(subscription));

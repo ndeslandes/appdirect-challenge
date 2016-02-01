@@ -38,6 +38,7 @@ public class SubscriptionRepository {
             ps.setString(1, subscription.companyName);
             ps.setString(2, subscription.edition);
             ps.setString(3, subscription.status);
+            ps.setString(4, subscription.marketPlaceBaseUrl);
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -47,7 +48,7 @@ public class SubscriptionRepository {
      * @param id the id of the Subscription
      * @return the Subscription corresponding to the given id
      */
-    public Subscription read(String id) {
+    public Subscription read(Long id) {
         return jdbc.queryForObject("SELECT id, company_name, edition, status FROM subscription WHERE id=?", mapper, id);
     }
 

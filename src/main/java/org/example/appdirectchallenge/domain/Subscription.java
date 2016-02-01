@@ -13,6 +13,10 @@ public class Subscription {
     public List<User> users;
 
 
+    public Subscription(Long id) {
+        this.id = id;
+    }
+
     public Subscription(Long id, String companyName, String edition, String status, String marketPlaceBaseUrl, List<User> users) {
         this.companyName = companyName;
         this.edition = edition;

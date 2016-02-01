@@ -49,7 +49,7 @@ public class UserRepository {
             ps.setString(2, user.firstname);
             ps.setString(3, user.lastname);
             ps.setString(4, user.email);
-            ps.setLong(5, user.subscriptionId);
+            ps.setLong(5, user.subscription.id);
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -82,6 +82,6 @@ public class UserRepository {
                     rs.getString("firstname"),
                     rs.getString("lastname"),
                     rs.getString("email"),
-                    rs.getLong("subscription_id"));
+                    new Subscription(rs.getLong("subscription_id")));
 
 }

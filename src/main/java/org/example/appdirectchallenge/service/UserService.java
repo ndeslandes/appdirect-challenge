@@ -1,5 +1,6 @@
 package org.example.appdirectchallenge.service;
 
+import org.example.appdirectchallenge.domain.SubscriptionRepository;
 import org.example.appdirectchallenge.domain.User;
 import org.example.appdirectchallenge.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,12 @@ public class UserService {
 
     private UserRepository userRepository;
 
+    private SubscriptionRepository subscriptionRepository;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, SubscriptionRepository subscriptionRepository) {
         this.userRepository = userRepository;
+        this.subscriptionRepository = subscriptionRepository;
     }
 
     @RequestMapping("/user/current")
@@ -29,7 +33,11 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Optional<User> user = userRepository.readByOpenid(User.extractOpenId(userDetails.getUsername()));
+            Optional<User> user = userRepository.readByOpenid(User.extractOpenId(userDetails.getUsername()))
+                    .map(u -> {
+                        u.subscription = subscriptionRepository.read(u.subscription.id);
+                        return u;
+                    });
             return user.map(u -> new ResponseEntity<>(user.get(), HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

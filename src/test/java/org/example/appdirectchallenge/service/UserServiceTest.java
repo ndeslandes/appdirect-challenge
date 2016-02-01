@@ -1,5 +1,7 @@
 package org.example.appdirectchallenge.service;
 
+import org.example.appdirectchallenge.domain.Subscription;
+import org.example.appdirectchallenge.domain.SubscriptionRepository;
 import org.example.appdirectchallenge.domain.User;
 import org.example.appdirectchallenge.domain.UserRepository;
 import org.junit.Before;
@@ -28,9 +30,12 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private SubscriptionRepository subscriptionRepository;
+
     @Before
     public void setUp() {
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, subscriptionRepository);
     }
 
     @Test
@@ -46,7 +51,7 @@ public class UserServiceTest {
         securityContext.setAuthentication(new OpenIDAuthenticationToken(openID, emptyList(), "", emptyList()));
         SecurityContextHolder.setContext(securityContext);
 
-        User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", 1L);
+        User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", new Subscription(1L));
         when(userRepository.readByOpenid("openID")).thenReturn(Optional.of(user));
         assertThat(userService.currentUser(), is(new ResponseEntity<>(user, HttpStatus.OK)));
     }

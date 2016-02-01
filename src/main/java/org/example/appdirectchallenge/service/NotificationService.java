@@ -59,7 +59,7 @@ public class NotificationService {
             }
 
             Long subscriptionId = subscriptionRepository.create(new Subscription(company.name, order.editionCode, account.map(a -> a.status).orElse(null), notification.marketplace.baseUrl));
-            userRepository.create(new User(User.extractOpenId(creator.openId), creator.firstName, creator.lastName, creator.email, subscriptionId));
+            userRepository.create(new User(User.extractOpenId(creator.openId), creator.firstName, creator.lastName, creator.email, new Subscription(subscriptionId)));
 
             return new ResponseEntity<>(new SuccessResponse(subscriptionId.toString()), HttpStatus.OK);
         } catch (Exception e) {
