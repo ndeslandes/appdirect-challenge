@@ -84,7 +84,7 @@ public class NotificationServiceTest {
     @Test
     public void notificationService_change_somethingWasChanged_returnTrue() {
         when(oAuthClient.getNotification("url")).thenReturn(buildNotification());
-        when(subscriptionRepository.update(new Subscription(1L, "CompanyName", "FREE", "ACTIVE", null))).thenReturn(true);
+        when(subscriptionRepository.update(new Subscription(1L, null, "FREE", "ACTIVE", null))).thenReturn(true);
 
         ResponseEntity<Response> response = notificationService.change("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -94,7 +94,7 @@ public class NotificationServiceTest {
     @Test
     public void notificationService_change_nothingWasChanged_returnFalseAndAccountNotFound() {
         when(oAuthClient.getNotification("url")).thenReturn(buildNotification());
-        when(subscriptionRepository.update(new Subscription(1L, "CompanyName", "FREE", "ACTIVE", null))).thenReturn(false);
+        when(subscriptionRepository.update(new Subscription(1L, null, "FREE", "ACTIVE", null))).thenReturn(false);
 
         ResponseEntity<Response> response = notificationService.change("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));

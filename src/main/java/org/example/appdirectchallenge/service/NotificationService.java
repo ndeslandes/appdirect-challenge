@@ -83,7 +83,7 @@ public class NotificationService {
             Company company = notification.payload.company;
             Order order = notification.payload.order;
 
-            if (subscriptionRepository.update(new Subscription(Long.valueOf(account.accountIdentifier), company.name, order.editionCode, account.status, null))) {
+            if (subscriptionRepository.update(new Subscription(Long.valueOf(account.accountIdentifier), null, order.editionCode, account.status, null))) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, String.format("The account %s could not be found.", account.accountIdentifier)), HttpStatus.OK);
