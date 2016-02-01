@@ -1,8 +1,11 @@
 package org.example.appdirectchallenge.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Collections;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Subscription {
 
     public Long id;
