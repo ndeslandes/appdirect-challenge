@@ -3,6 +3,7 @@
 Features implemented :
 * Single Sign On with the AppDirect OpenID provider
 * Subscription Notification Endpoint (create, change, cancel, status)
+* User Assignment Endpoint (assign, unassign)
 
 ## Installation
 mvn compile war:war
@@ -40,9 +41,14 @@ https://boiling-shore-27676.herokuapp.com/api/notification/subscription/cancel?u
 ###Subscription Status Notification URL
 https://boiling-shore-27676.herokuapp.com/api/notification/subscription/status?url={eventUrl}
 
+###User Assignment Notification URL
+https://boiling-shore-27676.herokuapp.com/api/notification/access/assign?url={eventUrl}
+
+###User Unassignment Notification URL
+https://boiling-shore-27676.herokuapp.com/api/notification/access/unassign?url={eventUrl}
+
 ###Authentication Login URL
 https://boiling-shore-27676.herokuapp.com/login/openid?openid_identifier={openid}
 
-##User Assignment Notification URL
-
-##User Unassignment Notification URL
+###Authentication Logout URL
+https://boiling-shore-27676.herokuapp.com/logout

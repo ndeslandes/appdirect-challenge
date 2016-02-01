@@ -47,9 +47,9 @@ public class UserAccountServiceTest {
         securityContext.setAuthentication(new OpenIDAuthenticationToken(openID, Collections.emptyList(), "", Collections.emptyList()));
         SecurityContextHolder.setContext(securityContext);
 
-        UserAccount userAccount = new UserAccount.Builder().id(1L).openId("https://example.org/openid/id/openID").name("Tony", "Stark").email("tony.stark@starkindustries.com").subscriptionId(1L).build();
-        when(userAccountRepository.readByOpenid("https://example.org/openid/id/openID")).thenReturn(Optional.of(userAccount));
-        assertThat(userService.currentUser(), is(new ResponseEntity<>(userAccount, HttpStatus.OK)));
+        UserAccount user = new UserAccount.Builder().id(1L).openId("https://example.org/openid/id/openID").name("Tony", "Stark").email("tony.stark@starkindustries.com").subscriptionId(1L).build();
+        when(userAccountRepository.readByOpenid("https://example.org/openid/id/openID")).thenReturn(Optional.of(user));
+        assertThat(userService.currentUser(), is(new ResponseEntity<>(user, HttpStatus.OK)));
     }
 
 }

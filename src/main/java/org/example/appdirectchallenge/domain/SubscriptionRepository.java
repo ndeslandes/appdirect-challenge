@@ -21,14 +21,14 @@ public class SubscriptionRepository {
     }
 
     /**
-     * @return all the Subscription in the database
+     * @return all the subscription in the database
      */
     public List<Subscription> list() {
         return jdbc.query("SELECT id, company_name, edition, status, market_place_base_url FROM subscription", mapper);
     }
 
     /**
-     * @param subscription the Subscription to insert in the database
+     * @param subscription the subscription to insert in the database
      * @return the auto-generated id of the new subscription
      */
     public Long create(Subscription subscription) {
@@ -45,14 +45,17 @@ public class SubscriptionRepository {
     }
 
     /**
-     * @param id the id of the Subscription
-     * @return the Subscription corresponding to the given id
+     * @param id the id of the subscription
+     * @return the subscription corresponding to the given id
      */
     public Subscription read(Long id) {
         return jdbc.queryForObject("SELECT id, company_name, edition, status, market_place_base_url FROM subscription WHERE id=?", mapper, id);
     }
 
     /**
+     *
+     * @param id the id of the subscription to update
+     * @param edition the new edition
      * @return false if no row was updated, true otherwise
      */
     public boolean updateEdition(Long id, String edition) {
@@ -60,6 +63,8 @@ public class SubscriptionRepository {
     }
 
     /**
+     * @param id the id of the subscription to update
+     * @param status the new status
      * @return false if no row was updated, true otherwise
      */
     public boolean updateStatus(Long id, String status) {
@@ -67,7 +72,7 @@ public class SubscriptionRepository {
     }
 
     /**
-     * @param id the id of the Subscription we want to delete
+     * @param id the id of the subscription to delete
      * @return false if no row was deleted, true otherwise
      */
     public boolean delete(Long id) {

@@ -42,14 +42,14 @@ public class UserAccount {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserAccount userAccount = (UserAccount) o;
+        UserAccount user = (UserAccount) o;
 
-        if (id != null ? !id.equals(userAccount.id) : userAccount.id != null) return false;
-        if (openId != null ? !openId.equals(userAccount.openId) : userAccount.openId != null) return false;
-        if (firstname != null ? !firstname.equals(userAccount.firstname) : userAccount.firstname != null) return false;
-        if (lastname != null ? !lastname.equals(userAccount.lastname) : userAccount.lastname != null) return false;
-        if (email != null ? !email.equals(userAccount.email) : userAccount.email != null) return false;
-        return subscriptionId != null ? subscriptionId.equals(userAccount.subscriptionId) : userAccount.subscriptionId == null;
+        if (id != null ? !id.equals(user.id) : user.id != null) return false;
+        if (openId != null ? !openId.equals(user.openId) : user.openId != null) return false;
+        if (firstname != null ? !firstname.equals(user.firstname) : user.firstname != null) return false;
+        if (lastname != null ? !lastname.equals(user.lastname) : user.lastname != null) return false;
+        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        return subscriptionId != null ? subscriptionId.equals(user.subscriptionId) : user.subscriptionId == null;
 
     }
 

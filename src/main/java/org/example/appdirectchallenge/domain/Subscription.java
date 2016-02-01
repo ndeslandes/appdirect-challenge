@@ -17,7 +17,7 @@ public class Subscription {
     public String edition;
     public String status;
     public String marketPlaceBaseUrl;
-    public List<UserAccount> userAccounts;
+    public List<UserAccount> users;
 
     /**
      * Use Subscription.Builder
@@ -34,7 +34,7 @@ public class Subscription {
         this.edition = builder.edition;
         this.status = builder.status;
         this.marketPlaceBaseUrl = builder.marketPlaceBaseUrl;
-        this.userAccounts = builder.userAccounts;
+        this.users = builder.users;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class Subscription {
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
         if (marketPlaceBaseUrl != null ? !marketPlaceBaseUrl.equals(that.marketPlaceBaseUrl) : that.marketPlaceBaseUrl != null)
             return false;
-        return userAccounts != null ? userAccounts.equals(that.userAccounts) : that.userAccounts == null;
+        return users != null ? users.equals(that.users) : that.users == null;
 
     }
 
@@ -64,7 +64,7 @@ public class Subscription {
         result = 31 * result + (edition != null ? edition.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (marketPlaceBaseUrl != null ? marketPlaceBaseUrl.hashCode() : 0);
-        result = 31 * result + (userAccounts != null ? userAccounts.hashCode() : 0);
+        result = 31 * result + (users != null ? users.hashCode() : 0);
         return result;
     }
 
@@ -78,7 +78,7 @@ public class Subscription {
         public String edition;
         public String status;
         public String marketPlaceBaseUrl;
-        public List<UserAccount> userAccounts = Collections.emptyList();
+        public List<UserAccount> users = Collections.emptyList();
 
         public Builder id(Long id) {
             this.id = id;
@@ -105,8 +105,8 @@ public class Subscription {
             return this;
         }
 
-        public Builder userAccounts(List<UserAccount> userAccounts) {
-            this.userAccounts = userAccounts;
+        public Builder users(List<UserAccount> users) {
+            this.users = users;
             return this;
         }
 

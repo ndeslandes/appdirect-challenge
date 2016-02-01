@@ -34,11 +34,11 @@ public class SubscriptionServiceTest {
 
     @Test
     public void subscriptionService_list_withOneSubscriptionAndOneUser_returnOneSubscription() {
-        UserAccount userAccount = new UserAccount.Builder().id(1L).openId("openID").name("Tony", "Stark").email("tony.stark@starkindustries.com").subscriptionId(1L).build();
-        Subscription subscription = new Subscription.Builder().id(1L).companyName("S.H.I.E.L.D.").edition("FREE").status("ACTIVE").marketPlaceBaseUrl("https://example.org/").userAccounts(Collections.singletonList(userAccount)).build();
+        UserAccount user = new UserAccount.Builder().id(1L).openId("openID").name("Tony", "Stark").email("tony.stark@starkindustries.com").subscriptionId(1L).build();
+        Subscription subscription = new Subscription.Builder().id(1L).companyName("S.H.I.E.L.D.").edition("FREE").status("ACTIVE").marketPlaceBaseUrl("https://example.org/").users(Collections.singletonList(user)).build();
 
         when(subscriptionRepository.list()).thenReturn(Collections.singletonList(subscription));
-        when(userAccountRepository.listBySubscription(1L)).thenReturn(Collections.singletonList(userAccount));
+        when(userAccountRepository.listBySubscription(1L)).thenReturn(Collections.singletonList(user));
 
         assertThat(subscriptionService.list(), contains(subscription));
     }

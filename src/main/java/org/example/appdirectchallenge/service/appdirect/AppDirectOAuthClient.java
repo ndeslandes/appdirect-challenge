@@ -1,4 +1,4 @@
-package org.example.appdirectchallenge.service;
+package org.example.appdirectchallenge.service.appdirect;
 
 import org.example.appdirectchallenge.domain.appdirect.Notification;
 import org.springframework.beans.factory.annotation.Autowired;

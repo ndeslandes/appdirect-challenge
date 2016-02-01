@@ -28,7 +28,7 @@ public class SubscriptionService {
     public List<Subscription> list() {
         List<Subscription> subscriptions = subscriptionRepository.list();
         return subscriptions.stream().map(subscription -> {
-            subscription.userAccounts = userAccountRepository.listBySubscription(subscription.id);
+            subscription.users = userAccountRepository.listBySubscription(subscription.id);
             return subscription;
         }).collect(Collectors.toList());
     }

@@ -48,7 +48,7 @@ public class SubscriptionServiceITest {
                 "\"edition\":\"FREE\"," +
                 "\"status\":\"INITIALIZED\"," +
                 "\"marketPlaceBaseUrl\":\"https://example.org\"," +
-                "\"userAccounts\":[{" +
+                "\"users\":[{" +
                 "\"id\":1," +
                 "\"openId\":\"https://example.org/openid/id/openID\"," +
                 "\"firstname\":\"Nicolas\"," +

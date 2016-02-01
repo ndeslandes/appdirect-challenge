@@ -5,7 +5,7 @@ $.ajax({
     url: '/api/user/current',
     dataType: 'json',
     success: function(user){
-        $('#currentUser').html(user.firstname + " " + user.lastname).attr('title', user.email);
+        $('#currentUser').html(user.firstname + " " + user.lastname);
         $('#logButton').attr('href', '/logout').html("Logout");
     },
     error: function (xhr, ajaxOptions, thrownError) {

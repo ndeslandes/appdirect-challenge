@@ -1,4 +1,4 @@
-package org.example.appdirectchallenge.service;
+package org.example.appdirectchallenge.service.appdirect;
 
 import org.example.appdirectchallenge.domain.Subscription;
 import org.example.appdirectchallenge.domain.SubscriptionRepository;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/notification/subscription")
-public class NotificationService {
+public class NotificationSubscriptionService {
 
-    private Logger logger = LoggerFactory.getLogger(NotificationService.class);
+    private Logger logger = LoggerFactory.getLogger(NotificationSubscriptionService.class);
 
     private SubscriptionRepository subscriptionRepository;
 
@@ -30,7 +30,7 @@ public class NotificationService {
 
 
     @Autowired
-    public NotificationService(SubscriptionRepository subscriptionRepository, UserAccountRepository userAccountRepository, AppDirectOAuthClient oAuthClient) {
+    public NotificationSubscriptionService(SubscriptionRepository subscriptionRepository, UserAccountRepository userAccountRepository, AppDirectOAuthClient oAuthClient) {
         this.subscriptionRepository = subscriptionRepository;
         this.userAccountRepository = userAccountRepository;
         this.oAuthClient = oAuthClient;
@@ -41,6 +41,7 @@ public class NotificationService {
         try {
             Notification notification = oAuthClient.getNotification(url);
 
+            //TODO or user?
             AppDirectUser creator = notification.creator;
             Company company = notification.payload.company;
             Order order = notification.payload.order;
@@ -69,12 +70,13 @@ public class NotificationService {
             Notification notification = oAuthClient.getNotification(url);
             Account account = notification.payload.account;
             Order order = notification.payload.order;
+            Long subscriptionId = Long.valueOf(account.accountIdentifier);
 
             if (Flag.STATELESS.equals(notification.flag)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             }
 
-            if (subscriptionRepository.updateEdition(Long.valueOf(account.accountIdentifier), order.editionCode)) {
+            if (subscriptionRepository.updateEdition(subscriptionId, order.editionCode)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, String.format("The account %s could not be found.", account.accountIdentifier)), HttpStatus.OK);
@@ -91,12 +93,13 @@ public class NotificationService {
         try {
             Notification notification = oAuthClient.getNotification(url);
             Account account = notification.payload.account;
+            Long subscriptionId = Long.valueOf(account.accountIdentifier);
 
             if (Flag.STATELESS.equals(notification.flag)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             }
 
-            if (subscriptionRepository.updateStatus(Long.valueOf(account.accountIdentifier), account.status)) {
+            if (subscriptionRepository.updateStatus(subscriptionId, account.status)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, String.format("The account %s could not be found.", account.accountIdentifier)), HttpStatus.OK);
@@ -112,17 +115,17 @@ public class NotificationService {
         try {
             Notification notification = oAuthClient.getNotification(url);
 
-            Long accountIdentifier = Long.valueOf(notification.payload.account.accountIdentifier);
+            Long subscriptionId = Long.valueOf(notification.payload.account.accountIdentifier);
 
             if (Flag.STATELESS.equals(notification.flag)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             }
 
-            userAccountRepository.deleteBySubscriptionId(accountIdentifier);
-            if (subscriptionRepository.delete(accountIdentifier)) {
+            userAccountRepository.deleteBySubscriptionId(subscriptionId);
+            if (subscriptionRepository.delete(subscriptionId)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, "The account " + accountIdentifier + " could not be found."), HttpStatus.OK);
+                return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, "The account " + subscriptionId + " could not be found."), HttpStatus.OK);
             }
         } catch (Exception e) {
             logger.error("Exception thrown", e);
