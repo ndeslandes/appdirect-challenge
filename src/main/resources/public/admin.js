@@ -7,7 +7,7 @@ $.ajax({
     success: function(subscriptions){
         jQuery.each(subscriptions, function(i, subscription) {
             var usersTable = '';
-            jQuery.each(subscription.users, function(i, user) {
+            jQuery.each(subscription.userAccounts, function(i, user) {
                 if (usersTable != '') usersTable += '<br>';
                 usersTable += user.firstname + " " + user.lastname + "&nbsp;<a href='/login/openid?openid_identifier=" + user.openId + "'>login</href>";
             });
