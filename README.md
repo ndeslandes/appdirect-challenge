@@ -30,4 +30,6 @@ https://boiling-shore-27676.herokuapp.com/api/notification/subscription/status?u
 ###Authentication Login URL
 https://boiling-shore-27676.herokuapp.com/login/openid?openid_identifier={openid}
 
-##
+##User Assignment Notification URL
+
+##User Unassignment Notification URL
