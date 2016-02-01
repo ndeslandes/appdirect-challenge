@@ -70,6 +70,7 @@ public class NotificationService {
         }
     }
 
+    //TODO separate change and status
     @RequestMapping({"change", "status"})
     public ResponseEntity<Response> change(@RequestParam("url") String url) {
         try {
