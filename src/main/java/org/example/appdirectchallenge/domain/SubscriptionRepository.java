@@ -34,7 +34,7 @@ public class SubscriptionRepository {
     public Long create(Subscription subscription) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(c -> {
-            PreparedStatement ps = c.prepareStatement("INSERT INTO subscription(company_name, edition, status, subscription, market_place_base_url) VALUES (?, ?, ?, ?)", new String[]{"id"});
+            PreparedStatement ps = c.prepareStatement("INSERT INTO subscription(company_name, edition, status, market_place_base_url) VALUES (?, ?, ?, ?)", new String[]{"id"});
             ps.setString(1, subscription.companyName);
             ps.setString(2, subscription.edition);
             ps.setString(3, subscription.status);
