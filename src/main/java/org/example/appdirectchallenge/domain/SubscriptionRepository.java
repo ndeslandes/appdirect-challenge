@@ -24,7 +24,7 @@ public class SubscriptionRepository {
      * @return all the Subscription in the database
      */
     public List<Subscription> list() {
-        return jdbc.query("SELECT id, company_name, edition, status FROM subscription", mapper);
+        return jdbc.query("SELECT id, company_name, edition, status, market_place_base_url FROM subscription", mapper);
     }
 
     /**
@@ -34,7 +34,7 @@ public class SubscriptionRepository {
     public Long create(Subscription subscription) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(c -> {
-            PreparedStatement ps = c.prepareStatement("INSERT INTO subscription(company_name, edition, status) VALUES (?, ?, ?)", new String[]{"id"});
+            PreparedStatement ps = c.prepareStatement("INSERT INTO subscription(company_name, edition, status, subscription, market_place_base_url) VALUES (?, ?, ?, ?)", new String[]{"id"});
             ps.setString(1, subscription.companyName);
             ps.setString(2, subscription.edition);
             ps.setString(3, subscription.status);
@@ -72,6 +72,7 @@ public class SubscriptionRepository {
                     rs.getLong("id"),
                     rs.getString("company_name"),
                     rs.getString("edition"),
-                    rs.getString("status"));
+                    rs.getString("status"),
+                    rs.getString("market_place_base_url"));
 
 }

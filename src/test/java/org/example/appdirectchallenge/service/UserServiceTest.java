@@ -42,7 +42,7 @@ public class UserServiceTest {
     @Test
     public void userService_currentUser_withecurityContext_returnUserAndHttpOk() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        org.springframework.security.core.userdetails.User openID = new org.springframework.security.core.userdetails.User("https://jacefoil-test.byappdirect.com/openid/id/openID", "", emptyList());
+        org.springframework.security.core.userdetails.User openID = new org.springframework.security.core.userdetails.User("https://example.org/openid/id/openID", "", emptyList());
         securityContext.setAuthentication(new OpenIDAuthenticationToken(openID, emptyList(), "", emptyList()));
         SecurityContextHolder.setContext(securityContext);
 

@@ -58,7 +58,7 @@ public class NotificationService {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.USER_ALREADY_EXISTS, ""), HttpStatus.CONFLICT);
             }
 
-            Long subscriptionId = subscriptionRepository.create(new Subscription(company.name, order.editionCode, account.map(a -> a.status).orElse(null)));
+            Long subscriptionId = subscriptionRepository.create(new Subscription(company.name, order.editionCode, account.map(a -> a.status).orElse(null), notification.marketplace.baseUrl));
             userRepository.create(new User(User.extractOpenId(creator.openId), creator.firstName, creator.lastName, creator.email, subscriptionId));
 
             return new ResponseEntity<>(new SuccessResponse(subscriptionId.toString()), HttpStatus.OK);
@@ -83,7 +83,7 @@ public class NotificationService {
             Company company = notification.payload.company;
             Order order = notification.payload.order;
 
-            if (subscriptionRepository.update(new Subscription(Long.valueOf(account.accountIdentifier), company.name, order.editionCode, account.status))) {
+            if (subscriptionRepository.update(new Subscription(Long.valueOf(account.accountIdentifier), company.name, order.editionCode, account.status, notification.marketplace.baseUrl))) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.ACCOUNT_NOT_FOUND, String.format("The account %s could not be found.", account.accountIdentifier)), HttpStatus.OK);
