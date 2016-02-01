@@ -51,7 +51,9 @@ public class UserServiceTest {
         securityContext.setAuthentication(new OpenIDAuthenticationToken(openID, emptyList(), "", emptyList()));
         SecurityContextHolder.setContext(securityContext);
 
-        User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", new Subscription(1L));
+        Subscription subscription = new Subscription(1L, "Stark Industries", "FREE", "ACTIVE", "https://example.org");
+        when(subscriptionRepository.read(1L)).thenReturn(subscription);
+        User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", subscription);
         when(userRepository.readByOpenid("openID")).thenReturn(Optional.of(user));
         assertThat(userService.currentUser(), is(new ResponseEntity<>(user, HttpStatus.OK)));
     }

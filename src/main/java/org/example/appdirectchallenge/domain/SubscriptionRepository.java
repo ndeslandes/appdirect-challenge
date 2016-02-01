@@ -49,7 +49,7 @@ public class SubscriptionRepository {
      * @return the Subscription corresponding to the given id
      */
     public Subscription read(Long id) {
-        return jdbc.queryForObject("SELECT id, company_name, edition, status FROM subscription WHERE id=?", mapper, id);
+        return jdbc.queryForObject("SELECT id, company_name, edition, status, market_place_base_url FROM subscription WHERE id=?", mapper, id);
     }
 
     /**
