@@ -38,7 +38,7 @@ public class UserAccountRepository {
     public Long create(UserAccount user) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(c -> {
-            PreparedStatement ps = c.prepareStatement("INSERT INTO user_account(openid, firstname, lastname, email, subscription_id) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = c.prepareStatement("INSERT INTO user_account(openid, firstname, lastname, email, subscription_id) VALUES (?, ?, ?, ?, ?)",  new int[] {1});
             ps.setString(1, user.openId);
             ps.setString(2, user.firstname);
             ps.setString(3, user.lastname);
