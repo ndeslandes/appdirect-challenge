@@ -12,9 +12,13 @@ public class AppDirectOAuthClient {
     @Autowired
     private ProtectedResourceDetails resource;
 
-    public Notification getNotification(String url) {
+    public Notification getNotification(String url, Notification.Type type) {
         OAuthRestTemplate rest = new OAuthRestTemplate(resource);
-        return rest.getForObject(url, Notification.class);
+        Notification notification = rest.getForObject(url, Notification.class);
+        if (!type.equals(notification.type)) {
+            throw new BadNotificationType(type, notification.type);
+        }
+        return notification;
     }
 
 }

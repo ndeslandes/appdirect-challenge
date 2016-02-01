@@ -5,7 +5,6 @@ import org.example.appdirectchallenge.domain.SubscriptionRepository;
 import org.example.appdirectchallenge.domain.UserAccount;
 import org.example.appdirectchallenge.domain.UserAccountRepository;
 import org.example.appdirectchallenge.domain.appdirect.*;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,8 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NotificationSubscriptionServiceTest {
@@ -41,7 +41,7 @@ public class NotificationSubscriptionServiceTest {
 
     @Test
     public void notificationService_create_withANonexisitingUser_returnTrueAndTheAccountIdentifier() {
-        when(oAuthClient.getNotification("url")).thenReturn(buildNotification());
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_ORDER)).thenReturn(buildNotification());
         when(userAccountRepository.readByOpenid("https://example.org/openid/id/openID")).thenReturn(Optional.empty());
         when(subscriptionRepository.create(new Subscription.Builder().companyName("CompanyName").edition("FREE").marketPlaceBaseUrl("https://example.org").build())).thenReturn(1L);
 
@@ -55,7 +55,7 @@ public class NotificationSubscriptionServiceTest {
 
     @Test
     public void notificationService_create_withAnAlreadyExistingUser_returnFalseAndUserAlreadyExistsAndHttpConflict() {
-        when(oAuthClient.getNotification("url")).thenReturn(buildNotification());
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_ORDER)).thenReturn(buildNotification());
         when(userAccountRepository.readByOpenid("https://example.org/openid/id/openID")).thenReturn(Optional.of(new UserAccount.Builder().openId("https://example.org/openid/id/openID").subscriptionId(1L).build()));
 
         ResponseEntity<Response> response = notificationSubscriptionService.create("url");
@@ -66,7 +66,7 @@ public class NotificationSubscriptionServiceTest {
 
     @Test
     public void notificationService_create_withAnException_returnFalseAnUnknownError() {
-        when(oAuthClient.getNotification("url")).thenThrow(new RuntimeException("FAIL!!!"));
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_ORDER)).thenThrow(new RuntimeException("FAIL!!!"));
 
         ResponseEntity<Response> response = notificationSubscriptionService.create("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -76,7 +76,7 @@ public class NotificationSubscriptionServiceTest {
 
     @Test
     public void notificationService_change_somethingWasChanged_returnTrue() {
-        when(oAuthClient.getNotification("url")).thenReturn(buildNotification());
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_CHANGE)).thenReturn(buildNotification());
         when(subscriptionRepository.updateEdition(1L, "FREE")).thenReturn(true);
 
         ResponseEntity<Response> response = notificationSubscriptionService.change("url");
@@ -86,7 +86,7 @@ public class NotificationSubscriptionServiceTest {
 
     @Test
     public void notificationService_change_nothingWasChanged_returnFalseAndAccountNotFound() {
-        when(oAuthClient.getNotification("url")).thenReturn(buildNotification());
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_CHANGE)).thenReturn(buildNotification());
         when(subscriptionRepository.updateEdition(1L, "FREE")).thenReturn(false);
 
         ResponseEntity<Response> response = notificationSubscriptionService.change("url");
@@ -97,7 +97,7 @@ public class NotificationSubscriptionServiceTest {
 
     @Test
     public void notificationService_status_somethingWasChanged_returnTrue() {
-        when(oAuthClient.getNotification("url")).thenReturn(buildNotification());
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_NOTICE)).thenReturn(buildNotification());
         when(subscriptionRepository.updateStatus(1L, "ACTIVE")).thenReturn(true);
 
         ResponseEntity<Response> response = notificationSubscriptionService.status("url");
@@ -107,7 +107,7 @@ public class NotificationSubscriptionServiceTest {
 
     @Test
     public void notificationService_status_nothingWasChanged_returnFalseAndAccountNotFound() {
-        when(oAuthClient.getNotification("url")).thenReturn(buildNotification());
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_NOTICE)).thenReturn(buildNotification());
         when(subscriptionRepository.updateStatus(1L, "ACTIVE")).thenReturn(false);
 
         ResponseEntity<Response> response = notificationSubscriptionService.status("url");
@@ -117,10 +117,10 @@ public class NotificationSubscriptionServiceTest {
     }
 
     @Test
-    public void notificationService_change_withAnException_returnFalseAnUnknownError() {
-        when(oAuthClient.getNotification("url")).thenThrow(new RuntimeException("FAIL!!!"));
+    public void notificationService_status_withAnException_returnFalseAnUnknownError() {
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_NOTICE)).thenThrow(new RuntimeException("FAIL!!!"));
 
-        ResponseEntity<Response> response = notificationSubscriptionService.change("url");
+        ResponseEntity<Response> response = notificationSubscriptionService.status("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().success, is("false"));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.UNKNOWN_ERROR));
@@ -128,7 +128,7 @@ public class NotificationSubscriptionServiceTest {
 
     @Test
     public void notificationService_cancel_somethingWasDeleted_returnTrue() {
-        when(oAuthClient.getNotification("url")).thenReturn(buildNotification());
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_CANCEL)).thenReturn(buildNotification());
         when(userAccountRepository.deleteBySubscriptionId(1L)).thenReturn(true);
         when(subscriptionRepository.delete(1L)).thenReturn(true);
 
@@ -139,7 +139,7 @@ public class NotificationSubscriptionServiceTest {
 
     @Test
     public void notificationService_cancel_nothingWasDeleted_returnFalseAndAccountNotFound() {
-        when(oAuthClient.getNotification("url")).thenReturn(buildNotification());
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_CANCEL)).thenReturn(buildNotification());
         when(userAccountRepository.deleteBySubscriptionId(1L)).thenReturn(true);
         when(subscriptionRepository.delete(1L)).thenReturn(false);
 
@@ -152,7 +152,7 @@ public class NotificationSubscriptionServiceTest {
 
     @Test
     public void notificationService_cancel_withAnException_returnFalseAnUnknownError() {
-        when(oAuthClient.getNotification("url")).thenThrow(new RuntimeException("FAIL!!!"));
+        when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_CANCEL)).thenThrow(new RuntimeException("FAIL!!!"));
 
         ResponseEntity<Response> response = notificationSubscriptionService.cancel("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));

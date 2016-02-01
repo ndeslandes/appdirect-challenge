@@ -39,9 +39,8 @@ public class NotificationSubscriptionService {
     @RequestMapping("create")
     public ResponseEntity<Response> create(@RequestParam("url") String url) {
         try {
-            Notification notification = oAuthClient.getNotification(url);
+            Notification notification = oAuthClient.getNotification(url, Notification.Type.SUBSCRIPTION_ORDER);
 
-            //TODO or user?
             AppDirectUser creator = notification.creator;
             Company company = notification.payload.company;
             Order order = notification.payload.order;
@@ -67,7 +66,7 @@ public class NotificationSubscriptionService {
     @RequestMapping("change")
     public ResponseEntity<Response> change(@RequestParam("url") String url) {
         try {
-            Notification notification = oAuthClient.getNotification(url);
+            Notification notification = oAuthClient.getNotification(url, Notification.Type.SUBSCRIPTION_CHANGE);
             Account account = notification.payload.account;
             Order order = notification.payload.order;
             Long subscriptionId = Long.valueOf(account.accountIdentifier);
@@ -91,13 +90,14 @@ public class NotificationSubscriptionService {
     @RequestMapping("status")
     public ResponseEntity<Response> status(@RequestParam("url") String url) {
         try {
-            Notification notification = oAuthClient.getNotification(url);
+            Notification notification = oAuthClient.getNotification(url, Notification.Type.SUBSCRIPTION_NOTICE);
             Account account = notification.payload.account;
-            Long subscriptionId = Long.valueOf(account.accountIdentifier);
 
             if (Flag.STATELESS.equals(notification.flag)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             }
+
+            Long subscriptionId = Long.valueOf(account.accountIdentifier);
 
             if (subscriptionRepository.updateStatus(subscriptionId, account.status)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
@@ -113,13 +113,13 @@ public class NotificationSubscriptionService {
     @RequestMapping("cancel")
     public ResponseEntity<Response> cancel(@RequestParam("url") String url) {
         try {
-            Notification notification = oAuthClient.getNotification(url);
-
-            Long subscriptionId = Long.valueOf(notification.payload.account.accountIdentifier);
+            Notification notification = oAuthClient.getNotification(url, Notification.Type.SUBSCRIPTION_CANCEL);
 
             if (Flag.STATELESS.equals(notification.flag)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             }
+
+            Long subscriptionId = Long.valueOf(notification.payload.account.accountIdentifier);
 
             userAccountRepository.deleteBySubscriptionId(subscriptionId);
             if (subscriptionRepository.delete(subscriptionId)) {

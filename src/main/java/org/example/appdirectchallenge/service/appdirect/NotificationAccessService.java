@@ -32,14 +32,15 @@ public class NotificationAccessService {
     @RequestMapping("assign")
     public ResponseEntity<Response> assign(@RequestParam("url") String url) {
         try {
-            Notification notification = oAuthClient.getNotification(url);
+            Notification notification = oAuthClient.getNotification(url, Notification.Type.USER_ASSIGNMENT);
 
             AppDirectUser user = notification.payload.user;
-            Long subscriptionId = Long.valueOf(notification.payload.account.accountIdentifier);
 
             if (Notification.Flag.STATELESS.equals(notification.flag)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             }
+
+            Long subscriptionId = Long.valueOf(notification.payload.account.accountIdentifier);
 
             if (userAccountRepository.readByOpenid(user.openId).isPresent()) {
                 return new ResponseEntity<>(new ErrorResponse(ErrorResponse.ErrorCode.USER_ALREADY_EXISTS, ""), HttpStatus.CONFLICT);
@@ -57,14 +58,15 @@ public class NotificationAccessService {
     @RequestMapping("unassign")
     public ResponseEntity<Response> unassign(@RequestParam("url") String url) {
         try {
-            Notification notification = oAuthClient.getNotification(url);
+            Notification notification = oAuthClient.getNotification(url, Notification.Type.USER_UNASSIGNMENT);
 
             AppDirectUser user = notification.payload.user;
-            Long subscriptionId = Long.valueOf(notification.payload.account.accountIdentifier);
 
             if (Notification.Flag.STATELESS.equals(notification.flag)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
             }
+
+            Long subscriptionId = Long.valueOf(notification.payload.account.accountIdentifier);
 
             if (userAccountRepository.deleteByOpenId(user.openId)) {
                 return new ResponseEntity<>(new SuccessResponse(subscriptionId.toString()), HttpStatus.OK);
