@@ -42,12 +42,12 @@ public class NotificationSubscriptionServiceTest {
     @Test
     public void notificationService_create_withANonexisitingUser_returnTrueAndTheAccountIdentifier() {
         when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_ORDER)).thenReturn(buildNotification());
-        when(userAccountRepository.readByOpenid("https://example.org/openid/id/openID")).thenReturn(Optional.empty());
+        when(userAccountRepository.readByOpenId("https://example.org/openid/id/openID")).thenReturn(Optional.empty());
         when(subscriptionRepository.create(new Subscription.Builder().companyName("CompanyName").edition("FREE").marketPlaceBaseUrl("https://example.org").build())).thenReturn(1L);
 
         ResponseEntity<Response> response = notificationSubscriptionService.create("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("true"));
+        assertThat(response.getBody().success, is(true));
         assertThat(((SuccessResponse) response.getBody()).accountIdentifier, is("1"));
 
         verify(userAccountRepository).create(new UserAccount.Builder().email("first.last@example.org").name("First", "Last").openId("https://example.org/openid/id/openID").subscriptionId(1L).build());
@@ -56,11 +56,11 @@ public class NotificationSubscriptionServiceTest {
     @Test
     public void notificationService_create_withAnAlreadyExistingUser_returnFalseAndUserAlreadyExistsAndHttpConflict() {
         when(oAuthClient.getNotification("url", Notification.Type.SUBSCRIPTION_ORDER)).thenReturn(buildNotification());
-        when(userAccountRepository.readByOpenid("https://example.org/openid/id/openID")).thenReturn(Optional.of(new UserAccount.Builder().openId("https://example.org/openid/id/openID").subscriptionId(1L).build()));
+        when(userAccountRepository.readByOpenId("https://example.org/openid/id/openID")).thenReturn(Optional.of(new UserAccount.Builder().openId("https://example.org/openid/id/openID").subscriptionId(1L).build()));
 
         ResponseEntity<Response> response = notificationSubscriptionService.create("url");
         assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.USER_ALREADY_EXISTS));
     }
 
@@ -70,7 +70,7 @@ public class NotificationSubscriptionServiceTest {
 
         ResponseEntity<Response> response = notificationSubscriptionService.create("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.UNKNOWN_ERROR));
     }
 
@@ -81,7 +81,7 @@ public class NotificationSubscriptionServiceTest {
 
         ResponseEntity<Response> response = notificationSubscriptionService.change("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("true"));
+        assertThat(response.getBody().success, is(true));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class NotificationSubscriptionServiceTest {
 
         ResponseEntity<Response> response = notificationSubscriptionService.change("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.ACCOUNT_NOT_FOUND));
     }
 
@@ -102,7 +102,7 @@ public class NotificationSubscriptionServiceTest {
 
         ResponseEntity<Response> response = notificationSubscriptionService.status("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("true"));
+        assertThat(response.getBody().success, is(true));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class NotificationSubscriptionServiceTest {
 
         ResponseEntity<Response> response = notificationSubscriptionService.status("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.ACCOUNT_NOT_FOUND));
     }
 
@@ -122,7 +122,7 @@ public class NotificationSubscriptionServiceTest {
 
         ResponseEntity<Response> response = notificationSubscriptionService.status("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.UNKNOWN_ERROR));
     }
 
@@ -134,7 +134,7 @@ public class NotificationSubscriptionServiceTest {
 
         ResponseEntity<Response> response = notificationSubscriptionService.cancel("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("true"));
+        assertThat(response.getBody().success, is(true));
     }
 
     @Test
@@ -145,7 +145,7 @@ public class NotificationSubscriptionServiceTest {
 
         ResponseEntity<Response> response = notificationSubscriptionService.cancel("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.ACCOUNT_NOT_FOUND));
 
     }
@@ -156,7 +156,7 @@ public class NotificationSubscriptionServiceTest {
 
         ResponseEntity<Response> response = notificationSubscriptionService.cancel("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.UNKNOWN_ERROR));
     }
 

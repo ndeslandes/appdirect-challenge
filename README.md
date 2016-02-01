@@ -5,27 +5,40 @@ Features implemented :
 * Subscription Notification Endpoint (create, change, cancel, status)
 * User Assignment Endpoint (assign, unassign)
 
+Application is deploy on heroku on https://boiling-shore-27676.herokuapp.com/
+
 ## Installation
 mvn compile war:war
 the war will be in target/appdirect-challenge-1.war
 
 Alternate installation
-mvn package
+mvn clean package
 java -jar target/appdirect-challenge-1.jar
 
 ##Frameworks and Libraries
-* Spring Boot: http://projects.spring.io/spring-boot/
-  * Spring Boot JDBC
-  * Spring Boot Security
-  * Spring Boot Test
-* Spring Security: http://projects.spring.io/spring-security/
-  * Spring Security OAuth
-  * Spring Security OpenID
-* WebJars: http://www.webjars.org/
-* Semantic UI: http://semantic-ui.com/
-* jQuery: https://jquery.com/
-* PostgreSQL: http://www.postgresql.org/
-* HyperSQL: http://hsqldb.org/
+### Spring Boot: http://projects.spring.io/spring-boot/
+Spring framework for micro-service
+####Spring Boot JDBC
+JDBC over JPA for better control of database query
+####Spring Boot Security
+Spring security implementation
+####Spring Boot Test
+Test utilities for Spring Boot application
+###Spring Security: http://projects.spring.io/spring-security/
+####Spring Security OAuth
+Spring implementation of OAuth 1
+#####Spring Security OpenID
+Spring implementation of OpenID
+###WebJars: http://www.webjars.org/
+Use maven for client-side dependencies
+###Semantic UI: http://semantic-ui.com/
+Easy UI framework
+###jQuery: https://jquery.com/
+Javascript utility library
+###PostgreSQL: http://www.postgresql.org/
+Default database of Heroku
+###HyperSQL: http://hsqldb.org/
+In-memory database for test purpose
 
 ## Usage
 

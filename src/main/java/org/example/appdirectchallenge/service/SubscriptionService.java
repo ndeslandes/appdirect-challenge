@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 @RequestMapping("api")
 public class SubscriptionService {
 
-    private SubscriptionRepository subscriptionRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
-    private UserAccountRepository userAccountRepository;
+    private final UserAccountRepository userAccountRepository;
 
     @Autowired
     public SubscriptionService(SubscriptionRepository subscriptionRepository, UserAccountRepository userAccountRepository) {
@@ -26,11 +26,10 @@ public class SubscriptionService {
 
     @RequestMapping("subscriptions")
     public List<Subscription> list() {
-        List<Subscription> subscriptions = subscriptionRepository.list();
-        return subscriptions.stream().map(subscription -> {
-            subscription.users = userAccountRepository.listBySubscription(subscription.id);
-            return subscription;
-        }).collect(Collectors.toList());
+        final List<Subscription> subscriptions = subscriptionRepository.list();
+        return subscriptions.stream().map(s -> new Subscription.Builder(s)
+                .users(userAccountRepository.listBySubscription(s.id))
+                .build()).collect(Collectors.toList());
     }
 
 }

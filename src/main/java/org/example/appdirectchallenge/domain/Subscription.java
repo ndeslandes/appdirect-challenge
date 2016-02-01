@@ -20,7 +20,8 @@ public class Subscription {
     public List<UserAccount> users;
 
     /**
-     * Use Subscription.Builder
+     * Use UserAccount.Builder
+     * Necessary for Jackson
      */
     private Subscription() {
     }
@@ -39,7 +40,7 @@ public class Subscription {
 
     @Override
     /**
-     * Necessary for the Mockito matchers
+     * Necessary for Mockito
      */
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,6 +80,18 @@ public class Subscription {
         public String status;
         public String marketPlaceBaseUrl;
         public List<UserAccount> users = Collections.emptyList();
+
+        public Builder() {
+
+        }
+        public Builder(Subscription s) {
+            this.id = s.id;
+            this.companyName = s.companyName;
+            this.edition = s.edition;
+            this.status = s.status;
+            this.marketPlaceBaseUrl = s.marketPlaceBaseUrl;
+            this.users = s.users;
+        }
 
         public Builder id(Long id) {
             this.id = id;

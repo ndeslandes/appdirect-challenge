@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequestMapping("api")
 public class UserService {
 
-    private UserAccountRepository userAccountRepository;
+    private final UserAccountRepository userAccountRepository;
 
     @Autowired
     public UserService(UserAccountRepository userAccountRepository) {
@@ -26,10 +26,10 @@ public class UserService {
 
     @RequestMapping("/user/current")
     public ResponseEntity<UserAccount> currentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Optional<UserAccount> user = userAccountRepository.readByOpenid(userDetails.getUsername());
+            final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            final Optional<UserAccount> user = userAccountRepository.readByOpenId(userDetails.getUsername());
             return user.map(u -> new ResponseEntity<>(user.get(), HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

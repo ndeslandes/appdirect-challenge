@@ -15,7 +15,7 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         if (authentication.getPrincipal() != null && authentication.getPrincipal() instanceof User) {
-            String openIdUrl = ((User) authentication.getPrincipal()).getUsername();
+            final String openIdUrl = ((User) authentication.getPrincipal()).getUsername();
             response.sendRedirect(String.format("https://www.appdirect.com/applogout?openid=%s", openIdUrl));
         }
     }

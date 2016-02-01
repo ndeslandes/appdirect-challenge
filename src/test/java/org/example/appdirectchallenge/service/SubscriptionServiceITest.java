@@ -1,6 +1,7 @@
 package org.example.appdirectchallenge.service;
 
 import org.example.appdirectchallenge.Application;
+import org.example.appdirectchallenge.domain.Subscription;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
@@ -40,20 +39,15 @@ public class SubscriptionServiceITest {
 
     @Test
     public void api_subscriptions_returnOneSubscription() {
-        ResponseEntity<String> response = template.getForEntity(base + "/subscriptions", String.class);
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-        assertThat(response.getBody(), equalTo("[{" +
-                "\"id\":1," +
-                "\"companyName\":\"Jacefoil inc\"," +
-                "\"edition\":\"FREE\"," +
-                "\"status\":\"INITIALIZED\"," +
-                "\"marketPlaceBaseUrl\":\"https://example.org\"," +
-                "\"users\":[{" +
-                "\"id\":1," +
-                "\"openId\":\"https://example.org/openid/id/openID\"," +
-                "\"firstname\":\"Nicolas\"," +
-                "\"lastname\":\"Deslandes\"," +
-                "\"email\":\"deslandes.nicolas@gmail.com\"," +
-                "\"subscriptionId\":1}]}]"));
+        Subscription[] object = template.getForObject(base + "/subscriptions", Subscription[].class);
+        assertThat(object[0].companyName, equalTo("Jacefoil inc"));
+        assertThat(object[0].edition, equalTo("FREE"));
+        assertThat(object[0].status, equalTo("INITIALIZED"));
+        assertThat(object[0].marketPlaceBaseUrl, equalTo("https://example.org"));
+        assertThat(object[0].users.get(0).openId, equalTo("https://example.org/openid/id/openID"));
+        assertThat(object[0].users.get(0).email, equalTo("deslandes.nicolas@gmail.com"));
+        assertThat(object[0].users.get(0).firstname, equalTo("Nicolas"));
+        assertThat(object[0].users.get(0).lastname, equalTo("Deslandes"));
     }
+
 }

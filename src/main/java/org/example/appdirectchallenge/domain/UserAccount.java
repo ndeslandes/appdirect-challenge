@@ -18,6 +18,7 @@ public class UserAccount {
 
     /**
      * Use UserAccount.Builder
+     * Necessary for Jackson
      */
     private UserAccount() {
     }

@@ -42,12 +42,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String consumerSecret;
 
     @Override
-    public void configure(final WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/*.{js,html}", "/webjars/**");
     }
 
     @Override
-    protected void configure(final HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         http.logout()
                 .logoutUrl("/logout")
                 .logoutSuccessHandler(logoutSuccessHandler);
@@ -111,9 +111,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public ProtectedResourceDetails protectedResourceDetails() {
-        BaseProtectedResourceDetails resource = new BaseProtectedResourceDetails();
+        final BaseProtectedResourceDetails resource = new BaseProtectedResourceDetails();
         resource.setConsumerKey(consumerKey);
         resource.setSharedSecret(new SharedConsumerSecretImpl(consumerSecret));
         return resource;
     }
+
 }

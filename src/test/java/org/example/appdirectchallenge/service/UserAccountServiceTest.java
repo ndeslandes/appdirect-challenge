@@ -48,7 +48,7 @@ public class UserAccountServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         UserAccount user = new UserAccount.Builder().id(1L).openId("https://example.org/openid/id/openID").name("Tony", "Stark").email("tony.stark@starkindustries.com").subscriptionId(1L).build();
-        when(userAccountRepository.readByOpenid("https://example.org/openid/id/openID")).thenReturn(Optional.of(user));
+        when(userAccountRepository.readByOpenId("https://example.org/openid/id/openID")).thenReturn(Optional.of(user));
         assertThat(userService.currentUser(), is(new ResponseEntity<>(user, HttpStatus.OK)));
     }
 

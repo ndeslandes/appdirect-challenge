@@ -16,4 +16,5 @@ public class MarketPlace {
         this.baseUrl = baseUrl;
         this.partner = partner;
     }
+
 }

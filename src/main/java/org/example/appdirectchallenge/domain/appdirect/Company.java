@@ -25,4 +25,5 @@ public class Company {
         this.phoneNumber = phoneNumber;
         this.website = website;
     }
+
 }

@@ -6,7 +6,7 @@ public class ErrorResponse extends Response {
     public String message;
 
     public ErrorResponse(ErrorCode errorCode, String message) {
-        this.success = "false";
+        this.success = false;
         this.errorCode = errorCode;
         this.message = message;
     }

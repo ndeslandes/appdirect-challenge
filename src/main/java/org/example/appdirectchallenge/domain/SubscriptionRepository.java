@@ -8,12 +8,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 
 @Repository
 public class SubscriptionRepository {
 
-    protected JdbcTemplate jdbc;
+    protected final JdbcTemplate jdbc;
 
     @Autowired
     public SubscriptionRepository(JdbcTemplate jdbc) {
@@ -32,9 +33,9 @@ public class SubscriptionRepository {
      * @return the auto-generated id of the new subscription
      */
     public Long create(Subscription subscription) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(c -> {
-            PreparedStatement ps = c.prepareStatement("INSERT INTO subscription(company_name, edition, status, market_place_base_url) VALUES (?, ?, ?, ?)", new String[]{"id"});
+            PreparedStatement ps = c.prepareStatement("INSERT INTO subscription(company_name, edition, status, market_place_base_url) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, subscription.companyName);
             ps.setString(2, subscription.edition);
             ps.setString(3, subscription.status);

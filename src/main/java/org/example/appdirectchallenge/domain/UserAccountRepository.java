@@ -9,13 +9,14 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class UserAccountRepository {
 
-    protected JdbcTemplate jdbc;
+    protected final JdbcTemplate jdbc;
 
     @Autowired
     public UserAccountRepository(JdbcTemplate jdbc) {
@@ -35,9 +36,9 @@ public class UserAccountRepository {
      * @return the auto-generated id of the new user_account
      */
     public Long create(UserAccount user) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(c -> {
-            PreparedStatement ps = c.prepareStatement("INSERT INTO user_account(openid, firstname, lastname, email, subscription_id) VALUES (?, ?, ?, ?, ?)", new String[]{"id"});
+            PreparedStatement ps = c.prepareStatement("INSERT INTO user_account(openid, firstname, lastname, email, subscription_id) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.openId);
             ps.setString(2, user.firstname);
             ps.setString(3, user.lastname);
@@ -52,7 +53,7 @@ public class UserAccountRepository {
      * @param openId the openid of the user_account
      * @return the optional user_account corresponding to the given openid
      */
-    public Optional<UserAccount> readByOpenid(String openId) {
+    public Optional<UserAccount> readByOpenId(String openId) {
         try {
             return Optional.of(jdbc.queryForObject("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account WHERE openid=?", mapper, openId));
         } catch (EmptyResultDataAccessException e) {

@@ -37,11 +37,11 @@ public class NotificationAccessServiceTest {
     @Test
     public void notificationService_assign_withANonexisitingUser_returnTrueAndTheAccountIdentifier() {
         when(oAuthClient.getNotification("url", Notification.Type.USER_ASSIGNMENT)).thenReturn(buildNotification());
-        when(userAccountRepository.readByOpenid("https://example.org/openid/id/openID")).thenReturn(Optional.empty());
+        when(userAccountRepository.readByOpenId("https://example.org/openid/id/openID")).thenReturn(Optional.empty());
 
         ResponseEntity<Response> response = notificationAccessService.assign("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("true"));
+        assertThat(response.getBody().success, is(true));
 
         verify(userAccountRepository).create(new UserAccount.Builder().email("first.last@example.org").name("First", "Last").openId("https://example.org/openid/id/openID").subscriptionId(1L).build());
     }
@@ -49,11 +49,11 @@ public class NotificationAccessServiceTest {
     @Test
     public void notificationService_assign_withAnAlreadyExistingUser_returnFalseAndUserAlreadyExistsAndHttpConflict() {
         when(oAuthClient.getNotification("url", Notification.Type.USER_ASSIGNMENT)).thenReturn(buildNotification());
-        when(userAccountRepository.readByOpenid("https://example.org/openid/id/openID")).thenReturn(Optional.of(new UserAccount.Builder().openId("https://example.org/openid/id/openID").subscriptionId(1L).build()));
+        when(userAccountRepository.readByOpenId("https://example.org/openid/id/openID")).thenReturn(Optional.of(new UserAccount.Builder().openId("https://example.org/openid/id/openID").subscriptionId(1L).build()));
 
         ResponseEntity<Response> response = notificationAccessService.assign("url");
         assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.USER_ALREADY_EXISTS));
     }
 
@@ -63,7 +63,7 @@ public class NotificationAccessServiceTest {
 
         ResponseEntity<Response> response = notificationAccessService.assign("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.UNKNOWN_ERROR));
     }
 
@@ -74,7 +74,7 @@ public class NotificationAccessServiceTest {
 
         ResponseEntity<Response> response = notificationAccessService.unassign("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("true"));
+        assertThat(response.getBody().success, is(true));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class NotificationAccessServiceTest {
 
         ResponseEntity<Response> response = notificationAccessService.unassign("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.USER_NOT_FOUND));
     }
 
@@ -94,7 +94,7 @@ public class NotificationAccessServiceTest {
 
         ResponseEntity<Response> response = notificationAccessService.unassign("url");
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().success, is("false"));
+        assertThat(response.getBody().success, is(false));
         assertThat(((ErrorResponse) response.getBody()).errorCode, is(ErrorResponse.ErrorCode.UNKNOWN_ERROR));
     }
 

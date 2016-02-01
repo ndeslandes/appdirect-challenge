@@ -1,10 +1,10 @@
 package org.example.appdirectchallenge.service.appdirect;
 
-import org.example.appdirectchallenge.domain.appdirect.Notification;
+import org.example.appdirectchallenge.domain.appdirect.Notification.Type;
 
 public class BadNotificationType extends RuntimeException {
 
-    public BadNotificationType(Notification.Type expected, Notification.Type actual) {
+    public BadNotificationType(Type expected, Type actual) {
         super(String.format("Bad Notification type. Expected %s, actual %s", expected, actual));
     }
 }
