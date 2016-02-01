@@ -13,9 +13,8 @@ public class AppDirectOAuthClient {
     private ProtectedResourceDetails resource;
 
     public Notification getNotification(String url) {
-
         OAuthRestTemplate rest = new OAuthRestTemplate(resource);
         return rest.getForObject(url, Notification.class);
-
     }
+
 }

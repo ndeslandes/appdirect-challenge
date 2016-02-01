@@ -57,19 +57,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated();
 
-        /*
         http.openidLogin()
-                .attributeExchange("https://www.appdirect.com/.*")
-                .attribute("email").type("http://axschema.org/contact/email").required(true)
-                .and().attribute("firstname").type("http://axschema.org/namePerson/first").required(true)
-                .and().attribute("lastname").type("http://axschema.org/namePerson/last").required(true);
-        */
-
-        http.openidLogin()
-            .authenticationUserDetailsService(userDetailsService)
-            .loginProcessingUrl("/login/openid")
-            .permitAll()
-            .defaultSuccessUrl("/");
+                .authenticationUserDetailsService(userDetailsService)
+                .loginProcessingUrl("/login/openid")
+                .permitAll()
+                .defaultSuccessUrl("/");
 
         http.addFilterBefore(oAuthProviderProcessingFilter(), OpenIDAuthenticationFilter.class);
     }

@@ -13,53 +13,46 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserRepository {
+public class UserAccountRepository {
 
     protected JdbcTemplate jdbc;
 
     @Autowired
-    public UserRepository(JdbcTemplate jdbc) {
+    public UserAccountRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
     /**
-     * @return all the User in the database
+     * @param subscriptionId the subscriptionId of the UserAccount
+     * @return all the UserAccount for the given subscriptionId in the database
      */
-    public List<User> list() {
-        return jdbc.query("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account", mapper);
-    }
-
-    /**
-     * @param subscriptionId the subscriptionId of the User
-     * @return all the User in the database
-     */
-    public List<User> list(Long subscriptionId) {
+    public List<UserAccount> listBySubscription(Long subscriptionId) {
         return jdbc.query("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account WHERE subscription_id = ?", mapper, subscriptionId);
     }
 
     /**
-     * @param user the User to insert in the database
-     * @return the auto-generated id of the new User
+     * @param userAccount the UserAccount to insert in the database
+     * @return the auto-generated id of the new UserAccount
      */
-    public Long create(User user) {
+    public Long create(UserAccount userAccount) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(c -> {
             PreparedStatement ps = c.prepareStatement("INSERT INTO user_account(openid, firstname, lastname, email, subscription_id) VALUES (?, ?, ?, ?, ?)", new String[]{"id"});
-            ps.setString(1, user.openId);
-            ps.setString(2, user.firstname);
-            ps.setString(3, user.lastname);
-            ps.setString(4, user.email);
-            ps.setLong(5, user.subscription.id);
+            ps.setString(1, userAccount.openId);
+            ps.setString(2, userAccount.firstname);
+            ps.setString(3, userAccount.lastname);
+            ps.setString(4, userAccount.email);
+            ps.setLong(5, userAccount.subscriptionId);
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
     /**
-     * @param openid the openid of the User
-     * @return the Optional User corresponding to the given openid
+     * @param openid the openid of the UserAccount
+     * @return the Optional UserAccount corresponding to the given openid
      */
-    public Optional<User> readByOpenid(String openid) {
+    public Optional<UserAccount> readByOpenid(String openid) {
         try {
             return Optional.of(jdbc.queryForObject("SELECT id, openid, firstname, lastname, email, subscription_id FROM user_account WHERE openid=?", mapper, openid));
         } catch (EmptyResultDataAccessException e) {
@@ -68,20 +61,19 @@ public class UserRepository {
     }
 
     /**
-     * @param subscriptionId the subscription_id of the User we want to delete
+     * @param subscriptionId the subscription_id of the UserAccount we want to delete
      * @return false if no row was deleted, true otherwise
      */
     public boolean deleteBySubscriptionId(Long subscriptionId) {
         return jdbc.update("DELETE FROM user_account WHERE subscription_id = ?", subscriptionId) != 0;
     }
 
-    private RowMapper<User> mapper =
-            (rs, rowNum) -> new User(
-                    rs.getLong("id"),
-                    rs.getString("openid"),
-                    rs.getString("firstname"),
-                    rs.getString("lastname"),
-                    rs.getString("email"),
-                    new Subscription(rs.getLong("subscription_id")));
+    private RowMapper<UserAccount> mapper =
+            (rs, rowNum) -> new UserAccount.Builder()
+                    .id(rs.getLong("id"))
+                    .openId(rs.getString("openid"))
+                    .name(rs.getString("firstname"), rs.getString("lastname"))
+                    .email(rs.getString("email"))
+                    .subscriptionId(rs.getLong("subscription_id")).build();
 
 }

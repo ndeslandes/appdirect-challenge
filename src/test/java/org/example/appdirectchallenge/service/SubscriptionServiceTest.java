@@ -2,8 +2,8 @@ package org.example.appdirectchallenge.service;
 
 import org.example.appdirectchallenge.domain.Subscription;
 import org.example.appdirectchallenge.domain.SubscriptionRepository;
-import org.example.appdirectchallenge.domain.User;
-import org.example.appdirectchallenge.domain.UserRepository;
+import org.example.appdirectchallenge.domain.UserAccount;
+import org.example.appdirectchallenge.domain.UserAccountRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,20 +25,20 @@ public class SubscriptionServiceTest {
     private SubscriptionRepository subscriptionRepository;
 
     @Mock
-    private UserRepository userRepository;
+    private UserAccountRepository userAccountRepository;
 
     @Before
     public void setUp() {
-        subscriptionService = new SubscriptionService(subscriptionRepository, userRepository);
+        subscriptionService = new SubscriptionService(subscriptionRepository, userAccountRepository);
     }
 
     @Test
     public void subscriptionService_list_withOneSubscriptionAndOneUser_returnOneSubscription() {
-        User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", new Subscription(1L));
-        Subscription subscription = new Subscription(1L, "S.H.I.E.L.D.", "FREE", "ACTIVE", "https://example.org/", Collections.singletonList(user));
+        UserAccount userAccount = new UserAccount.Builder().id(1L).openId("openID").name("Tony", "Stark").email("tony.stark@starkindustries.com").subscriptionId(1L).build();
+        Subscription subscription = new Subscription.Builder().id(1L).companyName("S.H.I.E.L.D.").edition("FREE").status("ACTIVE").marketPlaceBaseUrl("https://example.org/").userAccounts(Collections.singletonList(userAccount)).build();
 
         when(subscriptionRepository.list()).thenReturn(Collections.singletonList(subscription));
-        when(userRepository.list(1L)).thenReturn(Collections.singletonList(user));
+        when(userAccountRepository.listBySubscription(1L)).thenReturn(Collections.singletonList(userAccount));
 
         assertThat(subscriptionService.list(), contains(subscription));
     }

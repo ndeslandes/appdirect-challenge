@@ -53,11 +53,17 @@ public class SubscriptionRepository {
     }
 
     /**
-     * @param subscription the Subscription to update in the database. Only the edition AND the status will be update for the Subscription with the correct id.
      * @return false if no row was updated, true otherwise
      */
-    public boolean update(Subscription subscription) {
-        return jdbc.update("UPDATE subscription SET edition = ?, status = ? WHERE id = ?", subscription.edition, subscription.status, subscription.id) != 0;
+    public boolean updateEdition(Long id, String edition) {
+        return jdbc.update("UPDATE subscription SET edition = ? WHERE id = ?", edition, id) != 0;
+    }
+
+    /**
+     * @return false if no row was updated, true otherwise
+     */
+    public boolean updateStatus(Long id, String status) {
+        return jdbc.update("UPDATE subscription SET status = ? WHERE id = ?", status, id) != 0;
     }
 
     /**
@@ -69,11 +75,11 @@ public class SubscriptionRepository {
     }
 
     private RowMapper<Subscription> mapper =
-            (rs, rowNum) -> new Subscription(
-                    rs.getLong("id"),
-                    rs.getString("company_name"),
-                    rs.getString("edition"),
-                    rs.getString("status"),
-                    rs.getString("market_place_base_url"));
+            (rs, rowNum) -> new Subscription.Builder()
+                    .id(rs.getLong("id"))
+                    .companyName(rs.getString("company_name"))
+                    .edition(rs.getString("edition"))
+                    .status(rs.getString("status"))
+                    .marketPlaceBaseUrl(rs.getString("market_place_base_url")).build();
 
 }

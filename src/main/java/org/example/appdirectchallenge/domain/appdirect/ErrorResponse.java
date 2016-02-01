@@ -26,4 +26,5 @@ public class ErrorResponse extends Response {
         TRANSPORT_ERROR,
         UNKNOWN_ERROR
     }
+
 }

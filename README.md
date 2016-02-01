@@ -5,13 +5,26 @@ Features implemented :
 * Subscription Notification Endpoint (create, change, cancel, status)
 
 ## Installation
-
 mvn compile war:war
 the war will be in target/appdirect-challenge-1.war
 
 Alternate installation
 mvn package
 java -jar target/appdirect-challenge-1.jar
+
+##Frameworks and Libraries
+* Spring Boot: http://projects.spring.io/spring-boot/
+  * Spring Boot JDBC
+  * Spring Boot Security
+  * Spring Boot Test
+* Spring Security: http://projects.spring.io/spring-security/
+  * Spring Security OAuth
+  * Spring Security OpenID
+* WebJars: http://www.webjars.org/
+* Semantic UI: http://semantic-ui.com/
+* jQuery: https://jquery.com/
+* PostgreSQL: http://www.postgresql.org/
+* HyperSQL: http://hsqldb.org/
 
 ## Usage
 

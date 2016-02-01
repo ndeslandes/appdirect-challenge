@@ -1,8 +1,7 @@
 package org.example.appdirectchallenge.service;
 
-import org.example.appdirectchallenge.domain.SubscriptionRepository;
-import org.example.appdirectchallenge.domain.User;
-import org.example.appdirectchallenge.domain.UserRepository;
+import org.example.appdirectchallenge.domain.UserAccount;
+import org.example.appdirectchallenge.domain.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,29 +17,23 @@ import java.util.Optional;
 @RequestMapping("api")
 public class UserService {
 
-    private UserRepository userRepository;
-
-    private SubscriptionRepository subscriptionRepository;
+    private UserAccountRepository userAccountRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, SubscriptionRepository subscriptionRepository) {
-        this.userRepository = userRepository;
-        this.subscriptionRepository = subscriptionRepository;
+    public UserService(UserAccountRepository userAccountRepository) {
+        this.userAccountRepository = userAccountRepository;
     }
 
     @RequestMapping("/user/current")
-    public ResponseEntity<User> currentUser() {
+    public ResponseEntity<UserAccount> currentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Optional<User> user = userRepository.readByOpenid(User.extractOpenId(userDetails.getUsername()))
-                    .map(u -> {
-                        u.subscription = subscriptionRepository.read(u.subscription.id);
-                        return u;
-                    });
+            Optional<UserAccount> user = userAccountRepository.readByOpenid(userDetails.getUsername());
             return user.map(u -> new ResponseEntity<>(user.get(), HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 }

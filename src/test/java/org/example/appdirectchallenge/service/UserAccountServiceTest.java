@@ -1,9 +1,7 @@
 package org.example.appdirectchallenge.service;
 
-import org.example.appdirectchallenge.domain.Subscription;
-import org.example.appdirectchallenge.domain.SubscriptionRepository;
-import org.example.appdirectchallenge.domain.User;
-import org.example.appdirectchallenge.domain.UserRepository;
+import org.example.appdirectchallenge.domain.UserAccount;
+import org.example.appdirectchallenge.domain.UserAccountRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,29 +11,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
 
+import java.util.Collections;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceTest {
+public class UserAccountServiceTest {
 
     private UserService userService;
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private SubscriptionRepository subscriptionRepository;
+    private UserAccountRepository userAccountRepository;
 
     @Before
     public void setUp() {
-        userService = new UserService(userRepository, subscriptionRepository);
+        userService = new UserService(userAccountRepository);
     }
 
     @Test
@@ -47,15 +43,13 @@ public class UserServiceTest {
     @Test
     public void userService_currentUser_withecurityContext_returnUserAndHttpOk() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        org.springframework.security.core.userdetails.User openID = new org.springframework.security.core.userdetails.User("https://example.org/openid/id/openID", "", emptyList());
-        securityContext.setAuthentication(new OpenIDAuthenticationToken(openID, emptyList(), "", emptyList()));
+        User openID = new User("https://example.org/openid/id/openID", "", Collections.emptyList());
+        securityContext.setAuthentication(new OpenIDAuthenticationToken(openID, Collections.emptyList(), "", Collections.emptyList()));
         SecurityContextHolder.setContext(securityContext);
 
-        Subscription subscription = new Subscription(1L, "Stark Industries", "FREE", "ACTIVE", "https://example.org");
-        when(subscriptionRepository.read(1L)).thenReturn(subscription);
-        User user = new User(1L, "openID", "Tony", "Stark", "tony.stark@starkindustries.com", subscription);
-        when(userRepository.readByOpenid("openID")).thenReturn(Optional.of(user));
-        assertThat(userService.currentUser(), is(new ResponseEntity<>(user, HttpStatus.OK)));
+        UserAccount userAccount = new UserAccount.Builder().id(1L).openId("https://example.org/openid/id/openID").name("Tony", "Stark").email("tony.stark@starkindustries.com").subscriptionId(1L).build();
+        when(userAccountRepository.readByOpenid("https://example.org/openid/id/openID")).thenReturn(Optional.of(userAccount));
+        assertThat(userService.currentUser(), is(new ResponseEntity<>(userAccount, HttpStatus.OK)));
     }
 
 }
