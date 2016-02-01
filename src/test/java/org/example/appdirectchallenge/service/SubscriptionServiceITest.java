@@ -34,13 +34,13 @@ public class SubscriptionServiceITest {
 
     @Before
     public void setUp() throws MalformedURLException {
-        this.base = new URL("http://localhost:" + port);
+        this.base = new URL("http://localhost:" + port + "/api");
         template = new TestRestTemplate();
     }
 
     @Test
-    public void list() {
-        ResponseEntity<String> response = template.getForEntity(base + "/api/subscriptions", String.class);
+    public void api_subscriptions_returnOneSubscription() {
+        ResponseEntity<String> response = template.getForEntity(base + "/subscriptions", String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
         assertThat(response.getBody(), equalTo( "[{\"id\":1,\"companyName\":\"Jacefoil inc\",\"edition\":\"FREE\",\"status\":\"INITIALIZED\",\"marketPlaceBaseUrl\":\"https://example.org\",\"users\":[{\"id\":1,\"openId\":\"openID\",\"firstname\":\"Nicolas\",\"lastname\":\"Deslandes\",\"email\":\"deslandes.nicolas@gmail.com\",\"subscription\":{\"id\":1}}]}]"));
     }

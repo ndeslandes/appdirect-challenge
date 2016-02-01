@@ -30,20 +30,20 @@ public class NotificationService {
 
     private UserRepository userRepository;
 
-    private ProtectedResourceDetails resource;
+    private AppDirectOAuthClient oAuthClient;
+
 
     @Autowired
-    public NotificationService(SubscriptionRepository subscriptionRepository, UserRepository userRepository, ProtectedResourceDetails resource) {
+    public NotificationService(SubscriptionRepository subscriptionRepository, UserRepository userRepository, AppDirectOAuthClient oAuthClient) {
         this.subscriptionRepository = subscriptionRepository;
         this.userRepository = userRepository;
-        this.resource = resource;
+        this.oAuthClient = oAuthClient;
     }
 
     @RequestMapping("create")
     public ResponseEntity<Response> create(@RequestParam("url") String url) {
         try {
-            OAuthRestTemplate rest = new OAuthRestTemplate(resource);
-            Notification notification = rest.getForObject(url, Notification.class);
+            Notification notification = oAuthClient.getNotification(url);
 
             if(Flag.STATELESS.equals(notification.flag)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
@@ -53,13 +53,14 @@ public class NotificationService {
             Optional<Account> account = notification.payload.account;
             Company company = notification.payload.company;
             Order order = notification.payload.order;
+            String openId = User.extractOpenId(creator.openId);
 
-            if(userRepository.readByOpenid(creator.openId).isPresent()) {
+            if(userRepository.readByOpenid(openId).isPresent()) {
                 return new ResponseEntity<>(new ErrorResponse(ErrorCode.USER_ALREADY_EXISTS, ""), HttpStatus.CONFLICT);
             }
 
-            Long subscriptionId = subscriptionRepository.create(new Subscription(company.name, order.editionCode, account.map(a -> a.status).orElse(null), notification.marketplace.baseUrl));
-            userRepository.create(new User(User.extractOpenId(creator.openId), creator.firstName, creator.lastName, creator.email, new Subscription(subscriptionId)));
+            Long subscriptionId = subscriptionRepository.create(new Subscription(company.name, order.editionCode, null, notification.marketplace.baseUrl));
+            userRepository.create(new User(User.extractOpenId(openId), creator.firstName, creator.lastName, creator.email, new Subscription(subscriptionId)));
 
             return new ResponseEntity<>(new SuccessResponse(subscriptionId.toString()), HttpStatus.OK);
         } catch (Exception e) {
@@ -72,8 +73,7 @@ public class NotificationService {
     @RequestMapping({"change", "status"})
     public ResponseEntity<Response> change(@RequestParam("url") String url) {
         try {
-            OAuthRestTemplate rest = new OAuthRestTemplate(resource);
-            Notification notification = rest.getForObject(url, Notification.class);
+            Notification notification = oAuthClient.getNotification(url);
 
             if(Flag.STATELESS.equals(notification.flag)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);
@@ -98,8 +98,7 @@ public class NotificationService {
     @RequestMapping("cancel")
     public ResponseEntity<Response> cancel(@RequestParam("url") String url) {
         try {
-            OAuthRestTemplate rest = new OAuthRestTemplate(resource);
-            Notification notification = rest.getForObject(url, Notification.class);
+            Notification notification = oAuthClient.getNotification(url);
 
             if(Flag.STATELESS.equals(notification.flag)) {
                 return new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK);

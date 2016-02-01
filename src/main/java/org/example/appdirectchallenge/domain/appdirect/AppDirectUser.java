@@ -13,7 +13,6 @@ public class AppDirectUser {
     public String lastName;
     public String openId;
     public String uuid;
-    public Address address;
 
     @JsonCreator
     public AppDirectUser(@JsonProperty("uuid") String uuid,
@@ -21,15 +20,13 @@ public class AppDirectUser {
                          @JsonProperty("email") String email,
                          @JsonProperty("firstName") String firstName,
                          @JsonProperty("lastName") String lastName,
-                         @JsonProperty("language") String language,
-                         @JsonProperty("address") Address address) {
+                         @JsonProperty("language") String language) {
         this.uuid = uuid;
         this.email = email;
         this.firstName = firstName;
         this.language = language;
         this.lastName = lastName;
         this.openId = openId;
-        this.address = address;
     }
 
 }

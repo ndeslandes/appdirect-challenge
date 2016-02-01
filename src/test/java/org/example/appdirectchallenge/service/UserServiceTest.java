@@ -57,4 +57,5 @@ public class UserServiceTest {
         when(userRepository.readByOpenid("openID")).thenReturn(Optional.of(user));
         assertThat(userService.currentUser(), is(new ResponseEntity<>(user, HttpStatus.OK)));
     }
+
 }

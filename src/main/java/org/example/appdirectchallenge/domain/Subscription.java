@@ -42,4 +42,31 @@ public class Subscription {
         this(id, companyName, edition, status, marketPlaceBaseUrl, Collections.emptyList());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Subscription that = (Subscription) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (companyName != null ? !companyName.equals(that.companyName) : that.companyName != null) return false;
+        if (edition != null ? !edition.equals(that.edition) : that.edition != null) return false;
+        if (status != null ? !status.equals(that.status) : that.status != null) return false;
+        if (marketPlaceBaseUrl != null ? !marketPlaceBaseUrl.equals(that.marketPlaceBaseUrl) : that.marketPlaceBaseUrl != null)
+            return false;
+        return users != null ? users.equals(that.users) : that.users == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (companyName != null ? companyName.hashCode() : 0);
+        result = 31 * result + (edition != null ? edition.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (marketPlaceBaseUrl != null ? marketPlaceBaseUrl.hashCode() : 0);
+        result = 31 * result + (users != null ? users.hashCode() : 0);
+        return result;
+    }
 }

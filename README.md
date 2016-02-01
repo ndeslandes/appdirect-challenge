@@ -1,11 +1,17 @@
 # Appdirect-challenge
 
 Features implemented :
-* single sign on with the AppDirect OpenID provider
+* Single Sign On with the AppDirect OpenID provider
+* Subscription Notification Endpoint (create, change, cancel, status)
 
 ## Installation
 
 mvn compile war:war
+the war will be in target/appdirect-challenge-1.war
+
+Alternate installation
+mvn package
+java -jar target/appdirect-challenge-1.jar
 
 ## Usage
 
@@ -23,3 +29,5 @@ https://boiling-shore-27676.herokuapp.com/api/notification/subscription/status?u
 
 ###Authentication Login URL
 https://boiling-shore-27676.herokuapp.com/login/openid?openid_identifier={openid}
+
+##
