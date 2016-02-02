@@ -17,7 +17,7 @@ import org.springframework.security.openid.OpenIDAuthenticationToken;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +37,7 @@ public class UserAccountServiceTest {
     @Test
     public void userService_currentUser_withoutSecurityContext_returnNothingAndHttpNotFound() {
         SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
-        assertThat(userService.currentUser(), is(new ResponseEntity<>(HttpStatus.NOT_FOUND)));
+        assertThat(userService.currentUser(), equalTo(new ResponseEntity<>(HttpStatus.NOT_FOUND)));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class UserAccountServiceTest {
 
         UserAccount user = new UserAccount.Builder().id(1L).openId("https://example.org/openid/id/openID").name("Tony", "Stark").email("tony.stark@starkindustries.com").subscriptionId(1L).build();
         when(userAccountRepository.readByOpenId("https://example.org/openid/id/openID")).thenReturn(Optional.of(user));
-        assertThat(userService.currentUser(), is(new ResponseEntity<>(user, HttpStatus.OK)));
+        assertThat(userService.currentUser(), equalTo(new ResponseEntity<>(user, HttpStatus.OK)));
     }
 
 }

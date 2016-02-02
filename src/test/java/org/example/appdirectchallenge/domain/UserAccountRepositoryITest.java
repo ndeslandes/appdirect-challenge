@@ -10,8 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -39,10 +38,15 @@ public class UserAccountRepositoryITest {
     }
 
     @Test
-    public void userAccountRepository_readByOpenId() {
+    public void userAccountRepository_readByOpenId_returnAnUserAccount() {
         UserAccount user = new UserAccount.Builder().openId("https://example.org/openid/id/firstLastOpenID").name("First", "Last").email("first.last@example.org").subscriptionId(99L).build();
         userAccountRepository.create(user);
         assertTrue(userAccountRepository.readByOpenId("https://example.org/openid/id/firstLastOpenID").isPresent());
+    }
+
+    @Test
+    public void userAccountRepository_readByOpenId_returnNothing() {
+        assertFalse(userAccountRepository.readByOpenId("https://example.org/openid/id/firstLastOpenID").isPresent());
     }
 
     @Test

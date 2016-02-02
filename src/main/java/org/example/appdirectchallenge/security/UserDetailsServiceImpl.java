@@ -14,12 +14,12 @@ import java.util.Collections;
 public class UserDetailsServiceImpl implements UserDetailsService, AuthenticationUserDetailsService<OpenIDAuthenticationToken> {
 
     @Override
-    public UserDetails loadUserByUsername(final String openId) {
+    public UserDetails loadUserByUsername(String openId) {
         return new User(openId, "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
 
     @Override
-    public UserDetails loadUserDetails(final OpenIDAuthenticationToken token) {
+    public UserDetails loadUserDetails(OpenIDAuthenticationToken token) {
         return loadUserByUsername((String) token.getPrincipal());
     }
 
