@@ -10,6 +10,6 @@ $.ajax({
     },
     error: function (xhr, ajaxOptions, thrownError) {
         $('#currentUser').html("Anonymous");
-        $('#logButton').attr('href', '/login/openid?openid_identifier=https://www.appdirect.com/openid/id').html("Login");
+        $('#logButton').attr('href', '/login/openid?openid_identifier=https://jacefoil-test.byappdirect.com/openid/id').html("Login");
     }
 });
