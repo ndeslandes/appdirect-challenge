@@ -11,7 +11,7 @@ $.ajax({
                 if (usersTable != '') usersTable += '<br>';
                 usersTable += user.firstname + " " + user.lastname + "&nbsp;<a href='/login/openid?openid_identifier=" + user.openId + "'>log as</a>";
             });
-            $('#subscriptionTable').append('<tr><td>' + subscription.id + '</td><td>' + subscription.companyName + '</td><td>' + subscription.edition + '</td><td>' + $.trim(subscription.status) + '</td><td>' + usersTable + '</td></tr>');
+            $('#subscriptionTable').append('<tr><td>' + subscription.id + '</td><td>' + subscription.companyName + '</td><td>' + subscription.edition + '</td><td>' + usersTable + '</td></tr>');
         });
     }
 });
