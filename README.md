@@ -15,6 +15,10 @@ Alternate installation
 mvn clean package
 java -jar target/appdirect-challenge-1.jar
 
+The zip Product-77081.zip is an export of the product settings from the market jacefoil-test.byappdirect.com
+OAuth Consumer Key: appdirect-challenge-77081
+OAuth Consumer Secret: hFVd5c6NCltoFaNB 
+
 ##Frameworks and Libraries
 ### Spring Boot: http://projects.spring.io/spring-boot/
 Spring framework for micro-service
