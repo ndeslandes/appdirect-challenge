@@ -7,6 +7,10 @@ Features implemented :
 
 Application is deploy on heroku on https://boiling-shore-27676.herokuapp.com/
 
+## Requirements
+* Java 8
+* Maven
+
 ## Installation
 mvn clean package
 
