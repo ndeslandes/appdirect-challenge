@@ -8,12 +8,10 @@ Features implemented :
 Application is deploy on heroku on https://boiling-shore-27676.herokuapp.com/
 
 ## Installation
-mvn compile war:war
-the war will be in target/appdirect-challenge-1.war
-
-Alternate installation
 mvn clean package
-java -jar target/appdirect-challenge-1.jar
+the war will be in target/appdirect-challenge-1.war
+ the war is also executable
+java -jar target/appdirect-challenge-1.war
 
 The zip Product-77081.zip is an export of the product settings from the market jacefoil-test.byappdirect.com
 
